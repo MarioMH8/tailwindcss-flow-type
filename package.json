@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-flow-type",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "A Tailwind CSS plugin for fluid, responsive typography that scales smoothly across screen sizes with minimal configuration.",
 	"keywords": [
 		"tailwindcss",
@@ -10,11 +10,11 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/hexadrop/tailwindcss-flow-type.git"
+		"url": "git+https://github.com/MarioMH8/tailwindcss-flow-type.git"
 	},
-	"homepage": "https://github.com/hexadrop/tailwindcss-flow-type",
+	"homepage": "https://github.com/MarioMH8/tailwindcss-flow-type",
 	"bugs": {
-		"url": "https://github.com/hexadrop/tailwindcss-flow-type/issues"
+		"url": "https://github.com/MarioMH8/tailwindcss-flow-type/issues"
 	},
 	"license": "MIT",
 	"type": "module",
