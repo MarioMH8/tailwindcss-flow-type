@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "tailwind-fluid-type",
+      "name": "tailwindcss-flow-type",
       "devDependencies": {
         "@changesets/cli": "2.29.4",
         "@hexadrop/eslint-config": "0.1.3",

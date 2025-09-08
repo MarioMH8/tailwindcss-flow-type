@@ -1,6 +1,6 @@
 // Bun Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`tailwind-fluid-type index.html 1`] = `
+exports[`tailwindcss-flow-type should works with default settings 1`] = `
 "@layer theme, base, components, utilities;
 @layer theme {
   :root, :host {
@@ -8,6 +8,10 @@ exports[`tailwind-fluid-type index.html 1`] = `
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5 / 1);
+    --text-lg: 1.125rem;
+    --text-lg--line-height: calc(1.75 / 1.125);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
   }
@@ -162,8 +166,84 @@ exports[`tailwind-fluid-type index.html 1`] = `
 }
 @layer utilities {
   .text-base {
-    font-size: clamp(1.125rem, calc(1.125rem + ((1.25 - 1.125) * ((100vw - 20rem) / (96 - 20)))), 1.25rem);
-    line-height: var(--tw-leading, 1.6rem);
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
   }
+  .text-lg {
+    font-size: var(--text-lg);
+    line-height: var(--tw-leading, var(--text-lg--line-height));
+  }
+}"
+`;
+
+exports[`tailwindcss-flow-type should works with default prefix 1`] = `
+".flow-text-base {
+  font-size: clamp(1.125rem, calc(1.125rem + ((1.25 - 1.125) * ((100vw - 20rem) / (96 - 20)))), 1.25rem);
+}
+.flow-text-lg {
+  font-size: clamp(1.265625rem, calc(1.265625rem + ((1.5 - 1.265625) * ((100vw - 20rem) / (96 - 20)))), 1.5rem);
+}
+.flow-text-xl {
+  font-size: clamp(1.423828125rem, calc(1.423828125rem + ((1.7999999999999998 - 1.423828125) * ((100vw - 20rem) / (96 - 20)))), 1.7999999999999998rem);
+}
+.flow-text-base {
+  line-height: 1.6;
+}
+.flow-text-lg {
+  line-height: 1.6;
+}
+.flow-text-xl {
+  line-height: 1.2;
+}"
+`;
+
+exports[`tailwindcss-flow-type should works with override 1`] = `
+".text-base {
+  font-size: clamp(1.125rem, calc(1.125rem + ((1.25 - 1.125) * ((100vw - 20rem) / (96 - 20)))), 1.25rem);
+  line-height: var(--tw-leading, 1.6);
+}
+.text-lg {
+  font-size: clamp(1.265625rem, calc(1.265625rem + ((1.5 - 1.265625) * ((100vw - 20rem) / (96 - 20)))), 1.5rem);
+  line-height: var(--tw-leading, 1.6);
+}
+.text-xl {
+  font-size: clamp(1.423828125rem, calc(1.423828125rem + ((1.7999999999999998 - 1.423828125) * ((100vw - 20rem) / (96 - 20)))), 1.7999999999999998rem);
+  line-height: var(--tw-leading, 1.2);
+}"
+`;
+
+exports[`tailwindcss-flow-type should works with custom prefix 1`] = `
+".responsive-text-base {
+  font-size: clamp(1.125rem, calc(1.125rem + ((1.25 - 1.125) * ((100vw - 20rem) / (96 - 20)))), 1.25rem);
+}
+.responsive-text-lg {
+  font-size: clamp(1.265625rem, calc(1.265625rem + ((1.5 - 1.265625) * ((100vw - 20rem) / (96 - 20)))), 1.5rem);
+}
+.responsive-text-xl {
+  font-size: clamp(1.423828125rem, calc(1.423828125rem + ((1.7999999999999998 - 1.423828125) * ((100vw - 20rem) / (96 - 20)))), 1.7999999999999998rem);
+}
+.responsive-text-base {
+  line-height: 1.6;
+}
+.responsive-text-lg {
+  line-height: 1.6;
+}
+.responsive-text-xl {
+  line-height: 1.2;
+}"
+`;
+
+exports[`tailwindcss-flow-type should works with custom theme 1`] = `
+".text-base {
+  font-size: clamp(1.265625rem, calc(1.265625rem + ((1.5 - 1.265625) * ((100vw - 20rem) / (96 - 20)))), 1.5rem);
+  line-height: var(--tw-leading, 1.6);
+}
+.text-lg {
+  font-size: 2px;
+  line-height: var(--tw-leading, 1.6);
+}
+.text-xl {
+  font-size: clamp(1.423828125rem, calc(1.423828125rem + ((1.7999999999999998 - 1.423828125) * ((100vw - 20rem) / (96 - 20)))), 1.7999999999999998rem);
+  line-height: var(--tw-leading, 1.2);
 }"
 `;

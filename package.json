@@ -1,19 +1,20 @@
 {
-	"name": "tailwind-fluid-type",
+	"name": "tailwindcss-flow-type",
 	"version": "0.0.0",
-	"description": "A plugin that makes the use of Fluid Type a breeze.",
+	"description": "A Tailwind CSS plugin for fluid, responsive typography that scales smoothly across screen sizes with minimal configuration.",
 	"keywords": [
 		"tailwindcss",
+		"v4",
 		"fluid",
 		"typography"
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/hexadrop/tailwind-fluid-type.git"
+		"url": "git+https://github.com/hexadrop/tailwindcss-flow-type.git"
 	},
-	"homepage": "https://github.com/hexadrop/tailwind-fluid-type",
+	"homepage": "https://github.com/hexadrop/tailwindcss-flow-type",
 	"bugs": {
-		"url": "https://github.com/hexadrop/tailwind-fluid-type/issues"
+		"url": "https://github.com/hexadrop/tailwindcss-flow-type/issues"
 	},
 	"license": "MIT",
 	"type": "module",
@@ -41,7 +42,7 @@
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"prepublishOnly": "tsup",
-		"test": "bun test",
+		"test": "tsup && bun test",
 		"typecheck": "tsc --noEmit"
 	},
 	"peerDependencies": {

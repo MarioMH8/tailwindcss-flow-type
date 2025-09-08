@@ -1,18 +1,27 @@
 import type { PluginUtils } from 'tailwindcss/plugin';
 
-import { TAILWIND_FLUID_TYPES_SIZES } from '../options';
+import type { TailwindFlowTypeOptions } from '../options';
+import { calculateModularScale, isNumber } from '../utils';
+import type { TailwindFlowTypeTheme } from './flow-theme.type';
+import { TAILWIND_FLOW_TYPE_SIZES } from './flow-theme.type';
 
-export default function createTextTheme(): (plugin: PluginUtils) => Record<string, unknown> {
+export default function createTextTheme(
+	options: TailwindFlowTypeOptions
+): (plugin: PluginUtils) => Record<string, unknown> {
 	return plugin => {
 		const theme: Record<string, unknown> = {};
 
-		for (const size of TAILWIND_FLUID_TYPES_SIZES) {
+		const flowTextTheme = plugin.theme('flow-text') as TailwindFlowTypeTheme;
+		const flowLineHeightTheme = plugin.theme('flow-line-height') as TailwindFlowTypeTheme;
+
+		for (const size of TAILWIND_FLOW_TYPE_SIZES) {
+			const textSize = flowTextTheme[size];
+			const lineHeight = flowLineHeightTheme[size];
 			theme[size] = {
-				'-line-height': plugin.theme(`fluid.${size}.-line-height`),
-				DEFAULT: plugin.theme(`fluid.${size}.DEFAULT`),
+				'-line-height': lineHeight,
+				DEFAULT: isNumber(textSize) ? calculateModularScale(Number(textSize), options) : textSize,
 			};
 		}
-		console.log(theme);
 
 		return theme;
 	};

@@ -1,14 +1,14 @@
 import { DEFAULT_OPTIONS } from '../options';
 
 export default function calculateModularScale(value: number, options = DEFAULT_OPTIONS): string {
-	const sFtMin = options.settings.fontSizeMin;
-	const sFtMax = options.settings.fontSizeMax;
-	const sFtRMin = options.settings.ratioMin;
-	const sFtRMax = options.settings.ratioMax;
-	const sFtSMin = options.settings.screenMin;
-	const sFtSMax = options.settings.screenMax;
+	const sFtMin = options.fontSizeMin;
+	const sFtMax = options.fontSizeMax;
+	const sFtRMin = options.ratioMin;
+	const sFtRMax = options.ratioMax;
+	const sFtSMin = options.screenMin;
+	const sFtSMax = options.screenMax;
 
-	const sFtUnit = options.settings.unit;
+	const sFtUnit = options.unit;
 
 	const minValue = sFtMin * sFtRMin ** value;
 	const maxValue = sFtMax * sFtRMax ** value;

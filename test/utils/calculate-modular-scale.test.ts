@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 
 import { calculateModularScale, DEFAULT_OPTIONS } from '../../src';
 
-describe('tailwind-fluid-type', () => {
+describe('tailwindcss-flow-type', () => {
 	describe('calculateModularScale', () => {
 		describe('with default options', () => {
 			it.each([-4, -1, 0, 1, 4])('should works as expected with %p scale value', value => {
@@ -15,10 +15,7 @@ describe('tailwind-fluid-type', () => {
 			it.each([-4, -1, 0, 1, 4])('should works as expected with %p scale value', value => {
 				const result = calculateModularScale(value, {
 					...DEFAULT_OPTIONS,
-					settings: {
-						...DEFAULT_OPTIONS.settings,
-						unit: 'px',
-					},
+					unit: 'px',
 				});
 				expect(result).toMatchSnapshot();
 			});
@@ -28,11 +25,8 @@ describe('tailwind-fluid-type', () => {
 			it.each([-4, -1, 0, 1, 4])('should works as expected with %p scale value', value => {
 				const result = calculateModularScale(value, {
 					...DEFAULT_OPTIONS,
-					settings: {
-						...DEFAULT_OPTIONS.settings,
-						ratioMax: 1,
-						ratioMin: 1,
-					},
+					ratioMax: 1,
+					ratioMin: 1,
 				});
 				expect(result).toMatchSnapshot();
 			});
@@ -42,11 +36,8 @@ describe('tailwind-fluid-type', () => {
 			it.each([-4, -1, 0, 1, 4])('should works as expected with %p scale value', value => {
 				const result = calculateModularScale(value, {
 					...DEFAULT_OPTIONS,
-					settings: {
-						...DEFAULT_OPTIONS.settings,
-						screenMax: 20,
-						screenMin: 20,
-					},
+					screenMax: 20,
+					screenMin: 20,
 				});
 				expect(result).toMatchSnapshot();
 			});
@@ -56,11 +47,8 @@ describe('tailwind-fluid-type', () => {
 			it.each([-4, -1, 0, 1, 4])('should works as expected with %p scale value', value => {
 				const result = calculateModularScale(value, {
 					...DEFAULT_OPTIONS,
-					settings: {
-						...DEFAULT_OPTIONS.settings,
-						fontSizeMax: 0,
-						fontSizeMin: 0,
-					},
+					fontSizeMax: 0,
+					fontSizeMin: 0,
 				});
 				expect(result).toMatchSnapshot();
 			});

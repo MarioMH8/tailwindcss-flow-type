@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/tailwind-fluid-type.iml" filepath="$PROJECT_DIR$/.idea/tailwind-fluid-type.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/tailwindcss-flow-type.iml" filepath="$PROJECT_DIR$/.idea/tailwindcss-flow-type.iml" />
     </modules>
   </component>
 </project>
