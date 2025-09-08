@@ -127,7 +127,7 @@ As default, we use `rem` for better accessibility, but you can also use `px`.
     --flow-text-7xl: 8;
     --flow-text-8xl: 9;
     --flow-text-9xl: 10;
-    
+
     --flow-line-height-xs: 1.6;
     --flow-line-height-sm: 1.6;
     --flow-line-height-base: 1.6;
