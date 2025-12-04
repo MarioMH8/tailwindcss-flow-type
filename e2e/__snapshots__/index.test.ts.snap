@@ -193,7 +193,7 @@ exports[`tailwindcss-flow-type should works with default prefix 1`] = `
   line-height: 1.6;
 }
 .flow-text-xl {
-  line-height: 1.2;
+  line-height: 1.5;
 }"
 `;
 
@@ -208,7 +208,7 @@ exports[`tailwindcss-flow-type should works with override 1`] = `
 }
 .text-xl {
   font-size: clamp(1.423828125rem, calc(1.423828125rem + ((1.7999999999999998 - 1.423828125) * ((100vw - 20rem) / (96 - 20)))), 1.7999999999999998rem);
-  line-height: var(--tw-leading, 1.2);
+  line-height: var(--tw-leading, 1.5);
 }"
 `;
 
@@ -229,7 +229,7 @@ exports[`tailwindcss-flow-type should works with custom prefix 1`] = `
   line-height: 1.6;
 }
 .responsive-text-xl {
-  line-height: 1.2;
+  line-height: 1.5;
 }"
 `;
 
@@ -244,6 +244,6 @@ exports[`tailwindcss-flow-type should works with custom theme 1`] = `
 }
 .text-xl {
   font-size: clamp(1.423828125rem, calc(1.423828125rem + ((1.7999999999999998 - 1.423828125) * ((100vw - 20rem) / (96 - 20)))), 1.7999999999999998rem);
-  line-height: var(--tw-leading, 1.2);
+  line-height: var(--tw-leading, 1.5);
 }"
 `;
