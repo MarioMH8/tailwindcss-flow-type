@@ -4,4 +4,4 @@
 
 ### Patch Changes
 
-- Change package.json repository fields
+- Initial commit
