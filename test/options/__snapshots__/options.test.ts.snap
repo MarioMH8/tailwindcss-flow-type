@@ -24,11 +24,16 @@ exports[`tailwindcss-flow-type options TAILWIND_FLOW_TYPES_SIZES not change 1`] 
   "7xl",
   "8xl",
   "9xl",
+  "10xl",
+  "11xl",
+  "12xl",
   "base",
   "lg",
   "sm",
   "xl",
   "xs",
+  "2xs",
+  "3xs",
 ]
 `;
 

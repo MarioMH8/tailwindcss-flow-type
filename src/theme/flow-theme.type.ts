@@ -7,11 +7,16 @@ const TAILWIND_FLOW_TYPE_SIZES = [
 	'7xl',
 	'8xl',
 	'9xl',
+	'10xl',
+	'11xl',
+	'12xl',
 	'base',
 	'lg',
 	'sm',
 	'xl',
 	'xs',
+	'2xs',
+	'3xs',
 ] as const;
 
 type TailwindFlowTypeSizes = (typeof TAILWIND_FLOW_TYPE_SIZES)[number];
