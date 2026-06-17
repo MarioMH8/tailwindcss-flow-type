@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-flow-type",
-	"version": "0.0.2",
+	"version": "0.1.0",
 	"description": "A Tailwind CSS plugin for fluid, responsive typography that scales smoothly across screen sizes with minimal configuration.",
 	"keywords": [
 		"tailwindcss",
