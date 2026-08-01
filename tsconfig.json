@@ -1,3 +1,10 @@
 {
-	"extends": "@hexadrop/tsconfig"
+	"extends": "@hexadrop/tsconfig",
+	"compilerOptions": {
+		"ignoreDeprecations": "6.0",
+		"types": [
+			"bun"
+		]
+	},
+	"exclude": ["node_modules", "dist"]
 }
