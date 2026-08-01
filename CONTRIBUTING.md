@@ -209,6 +209,7 @@ Review feedback should be warm, direct, and useful quickly. Start with the actio
 - [ ] Commits are organized by deliverable work unit
 - [ ] All unit tests pass (`bun test`)
 - [ ] Commits follow Conventional Commits format
+- [ ] A changeset is included for any package behavior change (`bun changeset add`)
 - [ ] Code is self-reviewed
 
 ### PR Title
@@ -219,6 +220,16 @@ Use the same Conventional Commits format as commit messages:
 feat(tui): add keyboard shortcut help overlay
 fix(agent): handle missing HOME env var gracefully
 ```
+
+### Changesets
+
+If your PR changes package behavior, add a changeset using `@changesets/cli`:
+
+```bash
+bun changeset add
+```
+
+Select the appropriate semver bump and describe the change. The changeset will be used to generate the changelog and version bump during release.
 
 ### Automated PR Checks
 
