@@ -1,8 +1,8 @@
 import type { PluginAPI, PluginCreator } from 'tailwindcss/plugin';
 import createPlugin from 'tailwindcss/plugin';
 
-import type { FlowScale, FlowTypographyToken } from './core';
-import { createFluidTypographyToken } from './core';
+import type { FlowScale, FlowTypographyToken } from '@/core';
+import { createFluidTypographyToken } from '@/core';
 
 const TAILWIND_TEXT_TOKEN_NAMES = [
 	'xs',

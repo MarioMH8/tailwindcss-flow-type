@@ -1,6 +1,5 @@
+import generateCss from '@e2e/utils/generate-css';
 import { describe, expect, it } from 'bun:test';
-
-import generateCss from './utils/generate-css';
 
 describe('tailwindcss-flow-type', () => {
 	it('should generate semantic text utilities by default', async () => {
