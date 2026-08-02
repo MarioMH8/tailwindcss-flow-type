@@ -39,6 +39,28 @@
 			},
 			"default": "./dist/index.js"
 		},
+		"./core": {
+			"import": {
+				"types": "./dist/core/index.d.ts",
+				"default": "./dist/core/index.js"
+			},
+			"require": {
+				"types": "./dist/core/index.d.cts",
+				"default": "./dist/core/index.cjs"
+			},
+			"default": "./dist/core/index.js"
+		},
+		"./plugin": {
+			"import": {
+				"types": "./dist/plugin/index.d.ts",
+				"default": "./dist/plugin/index.js"
+			},
+			"require": {
+				"types": "./dist/plugin/index.d.cts",
+				"default": "./dist/plugin/index.cjs"
+			},
+			"default": "./dist/plugin/index.js"
+		},
 		"./preset/default.css": "./dist/preset/default.css"
 	},
 	"scripts": {
@@ -49,8 +71,8 @@
 		"lint:ci": "eslint --cache --cache-strategy content .",
 		"lint:fix": "eslint --cache --fix .",
 		"prepare": "husky",
-		"prepublishOnly": "tsup",
-		"test": "tsup && bun test",
+		"prepublishOnly": "bun run build",
+		"test": "bun run build && bun test",
 		"typecheck": "tsc --noEmit"
 	},
 	"peerDependencies": {
