@@ -39,7 +39,7 @@ jobs:
             -   name: ${{ matrix.command }}
                 run: bun run ${{ matrix.command }}
 
-    release-stable:
+    release:
         name: Release
         runs-on: ubuntu-latest
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
