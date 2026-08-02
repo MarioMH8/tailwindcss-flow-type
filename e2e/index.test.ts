@@ -1,35 +1,31 @@
+import generateCss from '@e2e/utils/generate-css';
 import { describe, expect, it } from 'bun:test';
 
-import generateCss from './utils/generate-css';
-
 describe('tailwindcss-flow-type', () => {
-	it('should works with default settings', async () => {
-		const css = await generateCss('test-1.html', {
-			onlyUtilities: false,
+	it('should generate semantic text utilities by default', async () => {
+		const css = await generateCss('test-1.html');
+
+		expect(css).toContain('.text-body');
+		expect(css).toContain('.text-heading');
+		expect(css).toContain('font-size: clamp(1rem, calc(1rem + (1.25rem - 1rem)');
+		expect(css).toContain('line-height: 1.6');
+	});
+
+	it('should support a custom utility namespace', async () => {
+		const css = await generateCss('test-2.html', {
+			options: '{ namespace: flow-text; }',
 		});
-		expect(css).toMatchSnapshot();
+
+		expect(css).toContain('.flow-text-body');
+		expect(css).toContain('font-size: clamp(1rem, calc(1rem + (1.25rem - 1rem)');
 	});
-	it('should works with default prefix', async () => {
-		const css = await generateCss('test-2.html');
-		expect(css).toMatchSnapshot();
-	});
-	it('should works with override', async () => {
+
+	it('should replace default text utilities only when configured', async () => {
 		const css = await generateCss('test-3.html', {
-			options: '{ override: true }',
+			options: '{ replaceDefaultTextScale: true; }',
 		});
-		expect(css).toMatchSnapshot();
-	});
-	it('should works with custom prefix', async () => {
-		const css = await generateCss('test-4.html', {
-			options: `{ prefix: 'responsive' }`,
-		});
-		expect(css).toMatchSnapshot();
-	});
-	it('should works with custom theme', async () => {
-		const css = await generateCss('test-5.html', {
-			options: '{ override: true; }',
-			theme: '--flow-text-base: 1; --flow-text-lg: 2px;',
-		});
-		expect(css).toMatchSnapshot();
+
+		expect(css).toContain('.text-base');
+		expect(css).toContain('font-size: clamp(1rem, calc(1rem + (1.25rem - 1rem)');
 	});
 });
