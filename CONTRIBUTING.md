@@ -222,7 +222,7 @@ Snapshot releases do not modify or commit version files. They use the pending ch
 1. When `develop` contains non-empty changesets, CI creates or updates the draft `changeset-release/main` pull request targeting `main`.
 2. Validate the current beta. When it is ready, mark the generated release pull request ready for review and merge it into `main`.
 3. The release job on `main` publishes the stable package to npm under the `latest` dist-tag.
-4. Merge `main` back into `develop` to synchronize the generated changelog, package version, and consumed changesets.
+4. CI opens an `internal:sync` pull request from `main` to `develop` after publication. Merge it to synchronize the generated changelog, package version, and consumed changesets.
 
 The generated release pull request contains the pending changes, calculated stable version, changelog entry, and consumed changesets. Changesets release pull requests and their version commits use `chore: release v<version>`. They do not publish packages; publication remains exclusive to `main`.
 
@@ -234,9 +234,11 @@ Use a `release/*` branch only when a release needs a stabilization period. It fr
 2. Allow only release-critical fixes, documentation updates, and QA changes on the release branch.
 3. Merge the release branch into `main` when it is approved.
 4. Changesets opens a version pull request on `main`; merge it to publish the stable package.
-5. Merge `main` back into `develop` so the stabilization fixes and generated release files return to the integration branch.
+5. Merge the `internal:sync` pull request from `main` to `develop` so the stabilization fixes and generated release files return to the integration branch.
 
 GitHub Actions must be allowed to create pull requests for the automated release pull request to work.
+
+The `internal:sync` label exempts automated branch synchronization pull requests from issue and type validation. They must not include changeset files.
 
 For an urgent production fix, create `hotfix/*` from `main`, include a changeset, merge it into `main`, then merge `main` back into `develop`.
 

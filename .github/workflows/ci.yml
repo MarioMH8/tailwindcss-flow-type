@@ -86,6 +86,49 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    sync-main-to-develop:
+        name: Sync main to develop
+        runs-on: ubuntu-latest
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        needs: [ release ]
+        concurrency:
+            group: sync-main-to-develop
+            cancel-in-progress: false
+        permissions:
+            contents: 'read'
+            issues: 'write'
+            pull-requests: 'write'
+        steps:
+            -   name: Create sync pull request when needed
+                env:
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |
+                    pending_release_prs="$(gh pr list --repo "$GITHUB_REPOSITORY" --base main --head changeset-release/main --state open --json number --jq 'length')"
+                    if [[ "$pending_release_prs" -gt 0 ]]; then
+                        echo "A release version pull request is still open."
+                        exit 0
+                    fi
+
+                    ahead_by="$(gh api "repos/$GITHUB_REPOSITORY/compare/develop...main" --jq '.ahead_by')"
+                    if [[ "$ahead_by" -eq 0 ]]; then
+                        echo "develop already contains main."
+                        exit 0
+                    fi
+
+                    existing_sync_prs="$(gh pr list --repo "$GITHUB_REPOSITORY" --base develop --head main --state open --json number --jq 'length')"
+                    if [[ "$existing_sync_prs" -gt 0 ]]; then
+                        echo "A main to develop synchronization pull request is already open."
+                        exit 0
+                    fi
+
+                    gh pr create \
+                        --repo "$GITHUB_REPOSITORY" \
+                        --base develop \
+                        --head main \
+                        --title 'chore: sync main to develop' \
+                        --body 'Automated synchronization of the released main branch into develop.' \
+                        --label 'internal:sync'
+
     release-beta:
         name: Release beta
         runs-on: ubuntu-latest
