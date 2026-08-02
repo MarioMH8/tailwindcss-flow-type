@@ -41,28 +41,25 @@ bun add tailwindcss-flow-type
 
 ## Usage
 
-### CSS-first preset
+### CSS plugin
 
-Import the preset to use the default semantic tokens without registering the JavaScript plugin:
+Define a modular token directly in a CSS stylesheet:
 
 ```css
 @import 'tailwindcss';
-@import 'tailwindcss-flow-type/preset/default.css';
+
+@plugin 'tailwindcss-flow-type';
+
+@theme {
+  --flow-token-body: 0;
+}
 ```
 
 ```html
-<article>
-  <p class="text-body">Fluid body text</p>
-  <h2 class="text-heading">Fluid heading</h2>
-  <h1 class="text-display leading-none">Fluid display text</h1>
-</article>
+<p class="text-body">Fluid body text</p>
 ```
 
-The preset provides `text-body`, `text-heading`, and `text-display`. Each token uses `clamp()`, so it responds to the viewport in the browser without runtime JavaScript.
-
-### JavaScript plugin
-
-Use the plugin when the project needs a custom scale, explicit token sizes, or a custom utility namespace:
+### TypeScript plugin
 
 ```typescript
 import flowType from 'tailwindcss-flow-type';
@@ -70,21 +67,8 @@ import flowType from 'tailwindcss-flow-type';
 const config = {
   plugins: [
     flowType({
-      namespace: 'text',
-      replaceDefaultTextScale: false,
-      scale: {
-        base: { max: '1.25rem', min: '1rem' },
-        ratio: { max: 1.2, min: 1.125 },
-        viewport: { max: '96rem', min: '20rem' },
-      },
       tokens: {
         body: { lineHeight: '1.6', scale: 0 },
-        display: {
-          letterSpacing: '-0.04em',
-          lineHeight: { max: '1', min: '0.9' },
-          size: { max: '7rem', min: '3rem' },
-        },
-        heading: { lineHeight: '1.15', scale: 3 },
       },
     }),
   ],
@@ -93,53 +77,87 @@ const config = {
 export default config;
 ```
 
-## Configuration
+### CSS-first preset
 
-### CSS token configuration
-
-The JavaScript plugin accepts flat options through `@plugin`. Define modular tokens in CSS with `@theme` using `--flow-token-*`; their value is the exponent in the configured modular scale. Add a matching `--flow-line-height-*` variable when the token needs a default line-height.
+Import the preset for the built-in semantic tokens:
 
 ```css
 @import 'tailwindcss';
+@import 'tailwindcss-flow-type/preset/default.css';
+```
 
+```html
+<h1 class="text-display">Fluid display text</h1>
+```
+
+The preset provides `text-body`, `text-heading`, and `text-display`. Each token uses `clamp()`, so it responds to the viewport in the browser without runtime JavaScript.
+
+## Configuration
+
+The CSS and TypeScript APIs configure the same model. CSS uses flat `@plugin` declarations and `@theme` variables; TypeScript uses nested objects.
+
+| Setting | CSS | TypeScript | Default |
+|---|---|---|---|
+| Utility namespace | `namespace: flow-text` | `namespace: 'flow-text'` | `text` |
+| Replace Tailwind text scale | `replace-default-text-scale: true` | `replaceDefaultTextScale: true` | `false` |
+| Base minimum | `scale-base-min: 1rem` | `scale.base.min: '1rem'` | `1rem` |
+| Base maximum | `scale-base-max: 1.25rem` | `scale.base.max: '1.25rem'` | `1.25rem` |
+| Minimum ratio | `scale-ratio-min: 1.125` | `scale.ratio.min: 1.125` | `1.125` |
+| Maximum ratio | `scale-ratio-max: 1.2` | `scale.ratio.max: 1.2` | `1.2` |
+| Minimum viewport | `scale-viewport-min: 20rem` | `scale.viewport.min: '20rem'` | `20rem` |
+| Maximum viewport | `scale-viewport-max: 96rem` | `scale.viewport.max: '96rem'` | `96rem` |
+| Modular token | `--flow-token-name: 3` | `tokens.name.scale: 3` | None |
+| Explicit token size | `--flow-size-name-min` / `--flow-size-name-max` | `tokens.name.size` | None |
+| Fixed line-height | `--flow-line-height-name` | `tokens.name.lineHeight` | None |
+| Fluid line-height | `--flow-line-height-name-min` / `--flow-line-height-name-max` | `tokens.name.lineHeight` | None |
+| Letter-spacing | `--flow-letter-spacing-name` | `tokens.name.letterSpacing` | None |
+
+`replaceDefaultTextScale` enables bundled fluid values for `text-xs` through `text-9xl`. A CSS or TypeScript token with the same name overrides the bundled value. Without an explicit token or replacement scale, the plugin emits no utilities.
+
+### Complete CSS example
+
+```css
 @plugin 'tailwindcss-flow-type' {
   namespace: flow-text;
+  scale-base-min: 1rem;
+  scale-base-max: 1.25rem;
+  scale-ratio-min: 1.125;
+  scale-ratio-max: 1.2;
+  scale-viewport-min: 20rem;
+  scale-viewport-max: 96rem;
 }
 
 @theme {
   --flow-token-body: 0;
-  --flow-token-heading: 3;
-  --flow-token-display: 6;
-
   --flow-line-height-body: 1.6;
-  --flow-line-height-heading: 1.15;
-  --flow-line-height-display: 1;
+  --flow-size-display-min: 3rem;
+  --flow-size-display-max: 7rem;
+  --flow-line-height-display-min: 0.9;
+  --flow-line-height-display-max: 1;
+  --flow-letter-spacing-display: -0.04em;
 }
 ```
 
-This produces `flow-text-body`, `flow-text-heading`, and `flow-text-display`. CSS-defined tokens override tokens with the same name from the plugin defaults.
+### Complete TypeScript example
 
-### Plugin options
-
-| Option                    | Type                    | Default                 | Description                                                               |
-|---------------------------|-------------------------|-------------------------|---------------------------------------------------------------------------|
-| `namespace`               | `string`                | `text`                  | Utility namespace. `flow-text` produces `flow-text-body`.                 |
-| `replaceDefaultTextScale` | `boolean`               | `false`                 | Enables replacement of Tailwind's `text-xs` through `text-9xl` utilities. |
-| `scale.base`              | `{ min, max }`          | `1rem` to `1.25rem`     | Base font-size range for modular tokens.                                  |
-| `scale.ratio`             | `{ min, max }`          | `1.125` to `1.2`        | Modular ratio range. Both values must be positive finite numbers.         |
-| `scale.viewport`          | `{ min, max }`          | `20rem` to `96rem`      | Viewport range used by fluid interpolation.                               |
-| `tokens`                  | `Record<string, token>` | Built-in semantic scale | JavaScript token definitions.                                             |
-
-Each JavaScript token must define exactly one source for `font-size`:
-
-| Token property  | Meaning                                              |
-|-----------------|------------------------------------------------------|
-| `scale`         | Numeric modular exponent, for example `3`.           |
-| `size`          | Explicit `{ min, max }` CSS values.                  |
-| `lineHeight`    | Fixed string or explicit fluid `{ min, max }` range. |
-| `letterSpacing` | Fixed CSS letter-spacing value.                      |
-
-Use `replaceDefaultTextScale: true` only when the project intentionally redefines Tailwind's built-in text scale. By default, the package adds semantic tokens and leaves Tailwind's `text-base`, `text-lg`, and similar utilities intact.
+```typescript
+flowType({
+  namespace: 'flow-text',
+  scale: {
+    base: { max: '1.25rem', min: '1rem' },
+    ratio: { max: 1.2, min: 1.125 },
+    viewport: { max: '96rem', min: '20rem' },
+  },
+  tokens: {
+    body: { lineHeight: '1.6', scale: 0 },
+    display: {
+      letterSpacing: '-0.04em',
+      lineHeight: { max: '1', min: '0.9' },
+      size: { max: '7rem', min: '3rem' },
+    },
+  },
+});
+```
 
 ## Migration
 
