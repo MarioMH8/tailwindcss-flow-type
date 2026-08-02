@@ -207,7 +207,7 @@ This project uses GitFlow with Changesets for versioning and npm publication.
 1. Create a `feature/*` branch from `develop`.
 2. Add a changeset for every package behavior change with `bun changeset add`.
 3. Open and merge the pull request into `develop`.
-4. After CI passes, each push to `develop` publishes a unique beta version to npm under the `beta` dist-tag.
+4. After CI passes, each push to `develop` that adds or modifies a changeset publishes a unique beta version to npm under the `beta` dist-tag.
 
 Install the current beta explicitly when testing it:
 
@@ -215,7 +215,7 @@ Install the current beta explicitly when testing it:
 npm install tailwindcss-flow-type@beta
 ```
 
-Snapshot releases do not modify or commit version files. They use the pending changesets to calculate a version such as `0.2.0-beta-20260802153000`.
+Snapshot releases do not modify or commit version files. They use the pending changesets to calculate a version such as `0.2.0-beta-20260802153000`. Documentation, tooling, and other changes without a changeset do not publish a beta.
 
 ### Stable Release
 

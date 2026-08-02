@@ -39,7 +39,7 @@ jobs:
             -   name: ${{ matrix.command }}
                 run: bun run ${{ matrix.command }}
 
-    release:
+    release-stable:
         name: Release
         runs-on: ubuntu-latest
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
@@ -129,11 +129,42 @@ jobs:
                         --body 'Automated synchronization of the released main branch into develop.' \
                         --label 'internal:sync'
 
+    detect-changeset-change:
+        name: Detect changeset change
+        runs-on: ubuntu-latest
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
+        outputs:
+            should_publish_beta: ${{ steps.detect.outputs.should_publish_beta }}
+        permissions:
+            contents: 'read'
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v7
+                with:
+                    fetch-depth: 0
+
+            -   name: Detect semantic changeset changes
+                id: detect
+                env:
+                    AFTER: ${{ github.sha }}
+                    BEFORE: ${{ github.event.before }}
+                run: |
+                    if [[ "$BEFORE" == "0000000000000000000000000000000000000000" ]]; then
+                        echo "should_publish_beta=true" >> "$GITHUB_OUTPUT"
+                        exit 0
+                    fi
+
+                    if git diff --quiet --diff-filter=AM "$BEFORE" "$AFTER" -- .changeset ':(exclude).changeset/README.md'; then
+                        echo "should_publish_beta=false" >> "$GITHUB_OUTPUT"
+                    else
+                        echo "should_publish_beta=true" >> "$GITHUB_OUTPUT"
+                    fi
+
     release-beta:
         name: Release beta
         runs-on: ubuntu-latest
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
-        needs: [ check ]
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' && needs.detect-changeset-change.outputs.should_publish_beta == 'true' }}
+        needs: [ check, detect-changeset-change ]
         concurrency:
             group: release-beta
             cancel-in-progress: false
