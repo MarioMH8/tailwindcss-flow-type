@@ -4,7 +4,7 @@ export default defineConfig([
 	{
 		clean: true,
 		dts: true,
-		entry: ['./src/index.ts'],
+		entry: ['./src/index.ts', './src/core/index.ts', './src/plugin/index.ts'],
 		format: ['esm'],
 		minify: false,
 		sourcemap: false,
@@ -12,7 +12,7 @@ export default defineConfig([
 	{
 		clean: false,
 		dts: true,
-		entry: ['./src/index.ts'],
+		entry: ['./src/index.ts', './src/core/index.ts', './src/plugin/index.ts'],
 		format: ['cjs'],
 		minify: false,
 		sourcemap: false,
@@ -20,7 +20,7 @@ export default defineConfig([
 	{
 		clean: false,
 		dts: false,
-		entry: ['./src/index.ts'],
+		entry: ['./src/index.ts', './src/core/index.ts', './src/plugin/index.ts'],
 		format: ['esm', 'cjs'],
 		minify: true,
 		outExtension({ format }) {
