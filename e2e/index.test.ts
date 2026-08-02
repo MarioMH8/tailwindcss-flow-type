@@ -20,6 +20,17 @@ describe('tailwindcss-flow-type', () => {
 		expect(css).toContain('font-size: clamp(1rem, calc(1rem + (1.25rem - 1rem)');
 	});
 
+	it('should resolve modular tokens declared through CSS theme variables', async () => {
+		const css = await generateCss('test-2.html', {
+			options: '{ namespace: flow-text; }',
+			theme: '--flow-token-body: 1; --flow-line-height-body: 1.4;',
+		});
+
+		expect(css).toContain('.flow-text-body');
+		expect(css).toContain('font-size: clamp(1.125rem, calc(1.125rem + (1.5rem - 1.125rem)');
+		expect(css).toContain('line-height: 1.4');
+	});
+
 	it('should replace default text utilities only when configured', async () => {
 		const css = await generateCss('test-3.html', {
 			options: '{ replaceDefaultTextScale: true; }',
