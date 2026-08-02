@@ -64,9 +64,8 @@
 		"./preset/default.css": "./dist/preset/default.css"
 	},
 	"scripts": {
-		"build": "tsup && bun run copy:preset",
+		"build": "tsup",
 		"commitlint": "commitlint --edit",
-		"copy:preset": "bun scripts/copy-preset.ts",
 		"lint": "eslint --cache .",
 		"lint:ci": "eslint --cache --cache-strategy content .",
 		"lint:fix": "eslint --cache --fix .",

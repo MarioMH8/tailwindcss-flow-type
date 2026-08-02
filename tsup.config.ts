@@ -1,4 +1,10 @@
+import { copyFile } from 'node:fs/promises';
+
 import { defineConfig } from 'tsup';
+
+async function copyPreset(): Promise<void> {
+	await copyFile(`src/preset/default.css`, `dist/preset/default.css`);
+}
 
 export default defineConfig([
 	{
@@ -23,6 +29,7 @@ export default defineConfig([
 		entry: ['./src/index.ts', './src/core/index.ts', './src/plugin/index.ts'],
 		format: ['esm', 'cjs'],
 		minify: true,
+		onSuccess: copyPreset,
 		outExtension({ format }) {
 			return {
 				js: `.min.${format === 'esm' ? 'js' : 'cjs'}`,
