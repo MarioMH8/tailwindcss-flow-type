@@ -28,6 +28,22 @@ const DEFAULT_FLOW_SCALE: FlowScale = {
 
 const DEFAULT_FLOW_TOKENS: Record<string, FlowTypographyToken> = {};
 
+const DEFAULT_REPLACEMENT_TOKENS: Record<string, FlowTypographyToken> = {
+	'2xl': { lineHeight: '1.5', scale: 3 },
+	'3xl': { lineHeight: '1.5', scale: 4 },
+	'4xl': { lineHeight: '1.5', scale: 5 },
+	'5xl': { lineHeight: '1.4', scale: 6 },
+	'6xl': { lineHeight: '1.4', scale: 7 },
+	'7xl': { lineHeight: '1.4', scale: 8 },
+	'8xl': { lineHeight: '1.4', scale: 9 },
+	'9xl': { lineHeight: '1.3', scale: 10 },
+	base: { lineHeight: '1.6', scale: 0 },
+	lg: { lineHeight: '1.6', scale: 1 },
+	sm: { lineHeight: '1.6', scale: -1 },
+	xl: { lineHeight: '1.5', scale: 2 },
+	xs: { lineHeight: '1.6', scale: -2 },
+};
+
 interface FlowTypePluginOptions {
 	namespace: string;
 	replaceDefaultTextScale: boolean;
@@ -97,6 +113,7 @@ function createFlowTypePlugin(userOptions: FlowTypePluginUserOptions = {}): Plug
 
 	return (api: PluginAPI) => {
 		const configuredTokens = {
+			...(options.namespace === 'text' && options.replaceDefaultTextScale && DEFAULT_REPLACEMENT_TOKENS),
 			...options.tokens,
 			...createCssThemeTokens(api.theme('flow-token'), api.theme('flow-line-height')),
 		};

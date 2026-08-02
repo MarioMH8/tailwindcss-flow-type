@@ -23,11 +23,21 @@ describe('tailwindcss-flow-type', () => {
 	it('should replace default text utilities only when configured', async () => {
 		const css = await generateCss('test-3.html', {
 			options: '{ replaceDefaultTextScale: true; }',
-			theme: '--flow-token-base: 0;',
 		});
 
 		expect(css).toContain('.text-base');
 		expect(css).toContain('font-size: clamp(1rem, calc(1rem + (1.25rem - 1rem)');
+	});
+
+	it('should let CSS tokens override the replacement scale', async () => {
+		const css = await generateCss('test-3.html', {
+			options: '{ replaceDefaultTextScale: true; }',
+			theme: '--flow-token-base: 1; --flow-line-height-base: 1.4;',
+		});
+
+		expect(css).toContain('.text-base');
+		expect(css).toContain('font-size: clamp(1.125rem, calc(1.125rem + (1.5rem - 1.125rem)');
+		expect(css).toContain('line-height: 1.4');
 	});
 
 	it('should generate semantic text utilities from the CSS-first preset', async () => {

@@ -124,7 +124,7 @@ This produces `flow-text-body`, `flow-text-heading`, and `flow-text-display`. CS
 | Option                    | Type                    | Default                 | Description                                                               |
 |---------------------------|-------------------------|-------------------------|---------------------------------------------------------------------------|
 | `namespace`               | `string`                | `text`                  | Utility namespace. `flow-text` produces `flow-text-body`.                 |
-| `replaceDefaultTextScale` | `boolean`               | `false`                 | Enables replacement of Tailwind's `text-xs` through `text-9xl` utilities. |
+| `replaceDefaultTextScale` | `boolean`               | `false`                 | Replaces Tailwind's `text-xs` through `text-9xl` utilities with the bundled fluid scale. |
 | `scale.base`              | `{ min, max }`          | `1rem` to `1.25rem`     | Base font-size range for modular tokens.                                  |
 | `scale.ratio`             | `{ min, max }`          | `1.125` to `1.2`        | Modular ratio range. Both values must be positive finite numbers.         |
 | `scale.viewport`          | `{ min, max }`          | `20rem` to `96rem`      | Viewport range used by fluid interpolation.                               |
@@ -139,7 +139,7 @@ Each JavaScript token must define exactly one source for `font-size`:
 | `lineHeight`    | Fixed string or explicit fluid `{ min, max }` range. |
 | `letterSpacing` | Fixed CSS letter-spacing value.                      |
 
-Use `replaceDefaultTextScale: true` only when the project intentionally redefines Tailwind's built-in text scale. By default, the plugin emits no utilities and leaves Tailwind's `text-base`, `text-lg`, and similar utilities intact.
+Use `replaceDefaultTextScale: true` only when the project intentionally redefines Tailwind's built-in text scale. It enables bundled fluid values for `text-xs` through `text-9xl`; JavaScript or CSS tokens with the same name override them. By default, the plugin emits no utilities and leaves Tailwind's `text-base`, `text-lg`, and similar utilities intact.
 
 ## Migration
 
