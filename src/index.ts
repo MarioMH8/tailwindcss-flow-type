@@ -6,6 +6,7 @@ import { parseOptions } from './options';
 import { createTextTheme, FLOW_TYPE_THEME_LINE_HEIGHT_DEFAULT, FLOW_TYPE_THEME_TEXT_DEFAULT } from './theme';
 import { calculateModularScale, isNumber } from './utils';
 
+export * from './core';
 export * from './options';
 export * from './theme';
 export * from './utils';
