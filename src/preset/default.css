@@ -1,0 +1,10 @@
+@theme {
+	--text-body: clamp(1rem, calc(1rem + (1.25rem - 1rem) * ((100vw - 20rem) / (96rem - 20rem))), 1.25rem);
+	--text-body--line-height: 1.6;
+
+	--text-heading: clamp(1.423828125rem, calc(1.423828125rem + (2.16rem - 1.423828125rem) * ((100vw - 20rem) / (96rem - 20rem))), 2.16rem);
+	--text-heading--line-height: 1.15;
+
+	--text-display: clamp(3rem, calc(3rem + (7rem - 3rem) * ((100vw - 20rem) / (96rem - 20rem))), 7rem);
+	--text-display--line-height: 0.9;
+}

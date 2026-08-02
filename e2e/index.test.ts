@@ -28,4 +28,14 @@ describe('tailwindcss-flow-type', () => {
 		expect(css).toContain('.text-base');
 		expect(css).toContain('font-size: clamp(1rem, calc(1rem + (1.25rem - 1rem)');
 	});
+
+	it('should generate semantic text utilities from the CSS-first preset', async () => {
+		const css = await generateCss('test-1.html', {
+			preset: true,
+		});
+
+		expect(css).toContain('--text-body: clamp(1rem, calc(1rem + (1.25rem - 1rem)');
+		expect(css).toContain('.text-body');
+		expect(css).toContain('font-size: var(--text-body)');
+	});
 });
