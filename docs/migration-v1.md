@@ -95,7 +95,7 @@ display: {
 
 ## Default Tailwind text scale
 
-V0's `override: true` changed the behavior of built-in `text-*` utilities. V1 leaves Tailwind's standard scale untouched by default and adds semantic tokens. Set `replaceDefaultTextScale: true` only when a project deliberately wants to replace `text-xs` through `text-9xl`.
+V0's `override: true` changed the behavior of built-in `text-*` utilities. V1 leaves Tailwind's standard scale untouched and emits no plugin utilities until tokens are defined. Set `replaceDefaultTextScale: true` only when a project deliberately wants to replace `text-xs` through `text-9xl`.
 
 ## Verify the migration
 

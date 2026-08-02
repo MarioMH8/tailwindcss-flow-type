@@ -26,28 +26,7 @@ const DEFAULT_FLOW_SCALE: FlowScale = {
 	viewport: { max: '96rem', min: '20rem' },
 };
 
-const DEFAULT_FLOW_TOKENS: Record<string, FlowTypographyToken> = {
-	'2xl': { lineHeight: '1.5', scale: 3 },
-	'3xl': { lineHeight: '1.5', scale: 4 },
-	'4xl': { lineHeight: '1.5', scale: 5 },
-	'5xl': { lineHeight: '1.4', scale: 6 },
-	'6xl': { lineHeight: '1.4', scale: 7 },
-	'7xl': { lineHeight: '1.4', scale: 8 },
-	'8xl': { lineHeight: '1.4', scale: 9 },
-	'9xl': { lineHeight: '1.3', scale: 10 },
-	base: { lineHeight: '1.6', scale: 0 },
-	body: { lineHeight: '1.6', scale: 0 },
-	display: {
-		letterSpacing: '-0.04em',
-		lineHeight: { max: '1', min: '0.9' },
-		size: { max: '7rem', min: '3rem' },
-	},
-	heading: { letterSpacing: '-0.02em', lineHeight: '1.15', scale: 3 },
-	lg: { lineHeight: '1.6', scale: 1 },
-	sm: { lineHeight: '1.6', scale: -1 },
-	xl: { lineHeight: '1.5', scale: 2 },
-	xs: { lineHeight: '1.6', scale: -2 },
-};
+const DEFAULT_FLOW_TOKENS: Record<string, FlowTypographyToken> = {};
 
 interface FlowTypePluginOptions {
 	namespace: string;

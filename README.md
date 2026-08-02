@@ -62,7 +62,7 @@ The preset provides `text-body`, `text-heading`, and `text-display`. Each token 
 
 ### JavaScript plugin
 
-Use the plugin when the project needs a custom scale, explicit token sizes, or a custom utility namespace:
+Use the plugin when the project needs a custom scale, explicit token sizes, or a custom utility namespace. It emits no typography utilities until the project defines at least one token.
 
 ```typescript
 import flowType from 'tailwindcss-flow-type';
@@ -117,7 +117,7 @@ The JavaScript plugin accepts flat options through `@plugin`. Define modular tok
 }
 ```
 
-This produces `flow-text-body`, `flow-text-heading`, and `flow-text-display`. CSS-defined tokens override tokens with the same name from the plugin defaults.
+This produces `flow-text-body`, `flow-text-heading`, and `flow-text-display`. CSS-defined tokens override JavaScript tokens with the same name.
 
 ### Plugin options
 
@@ -128,7 +128,7 @@ This produces `flow-text-body`, `flow-text-heading`, and `flow-text-display`. CS
 | `scale.base`              | `{ min, max }`          | `1rem` to `1.25rem`     | Base font-size range for modular tokens.                                  |
 | `scale.ratio`             | `{ min, max }`          | `1.125` to `1.2`        | Modular ratio range. Both values must be positive finite numbers.         |
 | `scale.viewport`          | `{ min, max }`          | `20rem` to `96rem`      | Viewport range used by fluid interpolation.                               |
-| `tokens`                  | `Record<string, token>` | Built-in semantic scale | JavaScript token definitions.                                             |
+| `tokens`                  | `Record<string, token>` | None                    | JavaScript token definitions.                                             |
 
 Each JavaScript token must define exactly one source for `font-size`:
 
@@ -139,7 +139,7 @@ Each JavaScript token must define exactly one source for `font-size`:
 | `lineHeight`    | Fixed string or explicit fluid `{ min, max }` range. |
 | `letterSpacing` | Fixed CSS letter-spacing value.                      |
 
-Use `replaceDefaultTextScale: true` only when the project intentionally redefines Tailwind's built-in text scale. By default, the package adds semantic tokens and leaves Tailwind's `text-base`, `text-lg`, and similar utilities intact.
+Use `replaceDefaultTextScale: true` only when the project intentionally redefines Tailwind's built-in text scale. By default, the plugin emits no utilities and leaves Tailwind's `text-base`, `text-lg`, and similar utilities intact.
 
 ## Migration
 
