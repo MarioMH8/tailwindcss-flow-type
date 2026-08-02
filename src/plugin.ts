@@ -85,18 +85,52 @@ function shouldReplaceDefaultTextScale(value: unknown): boolean {
 	return typeof value === 'boolean' ? value : DEFAULT_FLOW_TYPE_OPTIONS.replaceDefaultTextScale;
 }
 
+function createCssThemeTokens(flowTokens: unknown, flowLineHeights: unknown): Record<string, FlowTypographyToken> {
+	if (typeof flowTokens !== 'object' || flowTokens === null || Array.isArray(flowTokens)) {
+		return {};
+	}
+
+	const lineHeights: Record<string, unknown> =
+		typeof flowLineHeights === 'object' && flowLineHeights !== null && !Array.isArray(flowLineHeights)
+			? (flowLineHeights as Record<string, unknown>)
+			: {};
+	const tokens: Record<string, FlowTypographyToken> = {};
+
+	for (const [name, value] of Object.entries(flowTokens)) {
+		const scale = Number(value);
+
+		if (!Number.isFinite(scale)) {
+			continue;
+		}
+
+		const lineHeight = lineHeights[name];
+		tokens[name] = {
+			...(typeof lineHeight === 'string' && lineHeight.length > 0 && { lineHeight }),
+			scale,
+		};
+	}
+
+	return tokens;
+}
+
 function createFlowTypePlugin(userOptions: FlowTypePluginUserOptions = {}): PluginCreator {
 	const options = parseFlowTypePluginOptions(userOptions);
-	const tokens = Object.fromEntries(
-		Object.entries(options.tokens).filter(([name]) =>
-			options.namespace === 'text' && !options.replaceDefaultTextScale
-				? !TAILWIND_TEXT_TOKEN_NAMES.includes(name as (typeof TAILWIND_TEXT_TOKEN_NAMES)[number])
-				: true
-		)
-	);
-	const values = Object.fromEntries(Object.keys(tokens).map(name => [name, name]));
 
 	return (api: PluginAPI) => {
+		const configuredTokens = {
+			...options.tokens,
+			...createCssThemeTokens(api.theme('flow-token'), api.theme('flow-line-height')),
+		};
+		const tokenEntries = Object.entries(configuredTokens);
+		const tokens = Object.fromEntries(
+			tokenEntries.filter(([name]) =>
+				options.namespace === 'text' && !options.replaceDefaultTextScale
+					? !TAILWIND_TEXT_TOKEN_NAMES.includes(name as (typeof TAILWIND_TEXT_TOKEN_NAMES)[number])
+					: true
+			)
+		);
+		const values = Object.fromEntries(Object.keys(tokens).map(name => [name, name]));
+
 		api.matchUtilities(
 			{
 				[options.namespace]: (tokenName: string) => {
