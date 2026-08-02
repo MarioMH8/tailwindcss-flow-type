@@ -64,7 +64,7 @@ The preset provides `text-body`, `text-heading`, and `text-display`. Each token 
 
 Use the plugin when the project needs a custom scale, explicit token sizes, or a custom utility namespace:
 
-```text
+```typescript
 import flowType from 'tailwindcss-flow-type';
 
 const config = {
@@ -79,12 +79,12 @@ const config = {
       },
       tokens: {
         body: { lineHeight: '1.6', scale: 0 },
-        heading: { lineHeight: '1.15', scale: 3 },
         display: {
           letterSpacing: '-0.04em',
           lineHeight: { max: '1', min: '0.9' },
           size: { max: '7rem', min: '3rem' },
         },
+        heading: { lineHeight: '1.15', scale: 3 },
       },
     }),
   ],
@@ -121,23 +121,23 @@ This produces `flow-text-body`, `flow-text-heading`, and `flow-text-display`. CS
 
 ### Plugin options
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `namespace` | `string` | `text` | Utility namespace. `flow-text` produces `flow-text-body`. |
-| `replaceDefaultTextScale` | `boolean` | `false` | Enables replacement of Tailwind's `text-xs` through `text-9xl` utilities. |
-| `scale.base` | `{ min, max }` | `1rem` to `1.25rem` | Base font-size range for modular tokens. |
-| `scale.ratio` | `{ min, max }` | `1.125` to `1.2` | Modular ratio range. Both values must be positive finite numbers. |
-| `scale.viewport` | `{ min, max }` | `20rem` to `96rem` | Viewport range used by fluid interpolation. |
-| `tokens` | `Record<string, token>` | Built-in semantic scale | JavaScript token definitions. |
+| Option                    | Type                    | Default                 | Description                                                               |
+|---------------------------|-------------------------|-------------------------|---------------------------------------------------------------------------|
+| `namespace`               | `string`                | `text`                  | Utility namespace. `flow-text` produces `flow-text-body`.                 |
+| `replaceDefaultTextScale` | `boolean`               | `false`                 | Enables replacement of Tailwind's `text-xs` through `text-9xl` utilities. |
+| `scale.base`              | `{ min, max }`          | `1rem` to `1.25rem`     | Base font-size range for modular tokens.                                  |
+| `scale.ratio`             | `{ min, max }`          | `1.125` to `1.2`        | Modular ratio range. Both values must be positive finite numbers.         |
+| `scale.viewport`          | `{ min, max }`          | `20rem` to `96rem`      | Viewport range used by fluid interpolation.                               |
+| `tokens`                  | `Record<string, token>` | Built-in semantic scale | JavaScript token definitions.                                             |
 
 Each JavaScript token must define exactly one source for `font-size`:
 
-| Token property | Meaning |
-|---|---|
-| `scale` | Numeric modular exponent, for example `3`. |
-| `size` | Explicit `{ min, max }` CSS values. |
-| `lineHeight` | Fixed string or explicit fluid `{ min, max }` range. |
-| `letterSpacing` | Fixed CSS letter-spacing value. |
+| Token property  | Meaning                                              |
+|-----------------|------------------------------------------------------|
+| `scale`         | Numeric modular exponent, for example `3`.           |
+| `size`          | Explicit `{ min, max }` CSS values.                  |
+| `lineHeight`    | Fixed string or explicit fluid `{ min, max }` range. |
+| `letterSpacing` | Fixed CSS letter-spacing value.                      |
 
 Use `replaceDefaultTextScale: true` only when the project intentionally redefines Tailwind's built-in text scale. By default, the package adds semantic tokens and leaves Tailwind's `text-base`, `text-lg`, and similar utilities intact.
 
