@@ -1,7 +1,16 @@
 {
 	"extends": "@hexadrop/tsconfig",
 	"compilerOptions": {
+		"baseUrl": ".",
 		"ignoreDeprecations": "6.0",
+		"paths": {
+			"@/*": [
+				"./src/*"
+			],
+			"@e2e/*": [
+				"./e2e/*"
+			]
+		},
 		"types": [
 			"bun"
 		]
