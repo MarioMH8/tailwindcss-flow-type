@@ -13,6 +13,7 @@ Before you dive in, please read this guide fully. We have a structured workflow 
 - [Development Setup](#development-setup)
 - [Testing](#testing)
 - [Commit Convention](#commit-convention)
+- [Branching and Releases](#branching-and-releases)
 - [Pull Request Rules](#pull-request-rules)
 - [Code of Conduct](#code-of-conduct)
 
@@ -177,7 +178,7 @@ Breaking changes map to the `type:breaking-change` label.
 Branch names **must** match this pattern:
 
 ```
-^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)\/[a-z0-9._-]+$
+^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert|release|hotfix)\/[a-z0-9._-]+$
 ```
 
 **Rules:**
@@ -185,7 +186,55 @@ Branch names **must** match this pattern:
 - Use hyphens, dots, or underscores as separators (no spaces, no uppercase)
 - Description must be short and descriptive
 
-**Examples:** `feat/user-login`, `fix/crash-on-startup`, `docs/api-reference`, `ci/add-e2e-job`
+**Examples:** `feat/user-login`, `fix/crash-on-startup`, `docs/api-reference`, `release/0.2.0`, `hotfix/fix-publish`
+
+---
+
+## Branching and Releases
+
+This project uses GitFlow with Changesets for versioning and npm publication.
+
+| Branch | Purpose | Publication |
+|--------|---------|-------------|
+| `feature/*` | Product and maintenance work | None |
+| `develop` | Integration branch for the next release | Beta snapshot tagged `beta` |
+| `release/*` | Optional release stabilization branch created from `develop` | None |
+| `main` | Stable, production-ready releases | Stable release tagged `latest` |
+| `hotfix/*` | Urgent fix created from `main` | None |
+
+### Daily Development
+
+1. Create a `feature/*` branch from `develop`.
+2. Add a changeset for every package behavior change with `bun changeset add`.
+3. Open and merge the pull request into `develop`.
+4. After CI passes, each push to `develop` publishes a unique beta version to npm under the `beta` dist-tag.
+
+Install the current beta explicitly when testing it:
+
+```bash
+npm install tailwindcss-flow-type@beta
+```
+
+Snapshot releases do not modify or commit version files. They use the pending changesets to calculate a version such as `0.2.0-beta-20260802153000`.
+
+### Stable Release
+
+1. After a beta has been validated, open a pull request from `develop` to `main`.
+2. Merge the pull request into `main`.
+3. Changesets opens a version pull request on `main`.
+4. Merge that version pull request to publish the stable package to npm under the `latest` dist-tag.
+5. Merge `main` back into `develop` to synchronize the generated changelog, package version, and consumed changesets.
+
+### Release Stabilization
+
+Use a `release/*` branch only when a release needs a stabilization period. It freezes the release scope while new work continues on `develop`.
+
+1. Create `release/<version>` from `develop`.
+2. Allow only release-critical fixes, documentation updates, and QA changes on the release branch.
+3. Merge the release branch into `main` when it is approved, then follow the stable release steps from the version pull request onward.
+4. Merge `main` back into `develop` so the stabilization fixes and generated release files return to the integration branch.
+
+For an urgent production fix, create `hotfix/*` from `main`, include a changeset, merge it into `main`, then merge `main` back into `develop`.
 
 ---
 
