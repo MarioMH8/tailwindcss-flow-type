@@ -1,181 +1,73 @@
-![banner.png](.idea%2Fbanner.png)
+# tailwindcss-flow-type
 
-<h1 align="center">
-  tailwindcss-flow-type
-</h1>
+Fluid typography tokens for Tailwind CSS v4.
 
-<p align="center">
-  A Tailwind CSS plugin for fluid, responsive typography that scales smoothly across screen sizes with minimal configuration.
-</p>
-
-<p align="center">
-    <a href="https://www.npmjs.com/package/tailwindcss-flow-type" rel="nofollow">
-        <img src="https://img.shields.io/npm/v/tailwindcss-flow-type?style=flat-square" alt="npm" style="max-width: 100%;">
-    </a>
-    <a href="https://github.com/MarioMH8/tailwindcss-flow-type">
-        <img src="https://img.shields.io/github/issues/mariomh8/tailwindcss-flow-type?style=flat-square" alt="GitHub issues" style="max-width: 100%;">
-    </a>
-</p>
-
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
+V1 provides fluid `clamp()` values that respond to the viewport without runtime JavaScript. Use the CSS-first preset for the standard semantic scale, or the JavaScript plugin for a custom modular or explicit token system.
 
 ## Installation
 
-> This plugin requires Tailwind CSS 4 or higher.
-
 ```bash
-npm install --save tailwindcss-flow-type
+npm install tailwindcss-flow-type
 ```
 
-**Using bun**
+## CSS-first preset
 
-```bash
-bun add tailwindcss-flow-type
-```
-
-Include the plugin in your `.css` file:
+The default preset is the simplest Tailwind v4 integration:
 
 ```css
-@import 'tailwindcss';
-
-@plugin 'tailwindcss-flow-type';
+@import "tailwindcss";
+@import "tailwindcss-flow-type/preset/default.css";
 ```
 
-## Usage
-
-The default behavior of the plugin don't override the default `text-*` classes provided by Tailwind CSS. Instead, it
-adds a new set of `flow-*` classes that you can use to apply fluid typography styles.
+It defines `text-body`, `text-heading`, and `text-display`:
 
 ```html
-<article>
-    <h1 class="flow-text-base">Fluid type</h1>
-</article>
+<p class="text-body">Fluid body text</p>
+<h2 class="text-heading">Fluid heading</h2>
+<h1 class="text-display leading-none">Fluid display text</h1>
 ```
 
-```css
-.flow-text-base {
-    font-size: clamp(1.125rem, calc(1.125rem + ((1.25 - 1.125) * ((100vw - 20rem) / (96 - 20)))), 1.25rem);
-}
-.flow-text-base {
-    line-height: 1.6;
-}
-```
+Each value is dynamic in the browser through `clamp()`, while its limits are fixed at build time. For example, `text-body` grows from `1rem` to `1.25rem` between `20rem` and `96rem` viewport widths.
 
-**Override default classes**
+## JavaScript plugin
 
-You can override the default `text-*` classes by setting the `override` option to `true` when configuring the plugin:
+Use the plugin when a project needs its own scale or tokens:
 
-```css
-@import 'tailwindcss';
+```text
+import flowType from "tailwindcss-flow-type";
 
-@plugin 'tailwindcss-flow-type' {
-    override: true
+export default {
+  plugins: [
+    flowType({
+      namespace: "text",
+      replaceDefaultTextScale: false,
+      scale: {
+        viewport: { min: "20rem", max: "96rem" },
+        base: { min: "1rem", max: "1.25rem" },
+        ratio: { min: 1.125, max: 1.2 },
+      },
+      tokens: {
+        body: { scale: 0, lineHeight: "1.6" },
+        heading: { scale: 3, lineHeight: "1.15" },
+        display: {
+          size: { min: "3rem", max: "7rem" },
+          lineHeight: { min: "0.9", max: "1" },
+          letterSpacing: "-0.04em",
+        },
+      },
+    }),
+  ],
 };
 ```
 
-Then you can use the `text-*` classes to apply fluid typography styles:
+`scale` derives a token from the modular exponent. `size` defines an explicit fluid range. A token must use exactly one of them.
 
-```html
-<article>
-    <h1 class="text-base">Fluid type</h1>
-</article>
-```
+Set `namespace: "flow-text"` to emit `flow-text-body`, `flow-text-heading`, and similar utilities instead. Set `replaceDefaultTextScale: true` only when the project intends to replace Tailwind's standard `text-xs` through `text-9xl` utilities.
 
-```css
-.text-base {
-    font-size: clamp(1.125rem, calc(1.125rem + ((1.25 - 1.125) * ((100vw - 20rem) / (96 - 20)))), 1.25rem);
-    line-height: var(--tw-leading, 1.6);
-}
-```
+## Migration from 0.1.0
 
-## Configuration
+See [the V1 migration guide](./docs/migration-v1.md) for the removed V0 options, theme namespaces, and the replacement API.
 
-The plugin comes with a default configuration (see below) but it's possible to customize this config for your project.
-As default, we use `rem` for better accessibility, but you can also use `px`.
+## License
 
-```css
-@import 'tailwindcss';
-
-@plugin 'tailwindcss-flow-type' {
-    fontSizeMax: 1.25;
-    fontSizeMin: 1.125;
-    override: true;
-    prefix: flow;
-    ratioMax: 1.2;
-    ratioMin: 1.125;
-    screenMax: 96;
-    screenMin: 20;
-    unit: rem;
-};
-
-@theme {
-    --flow-text-xs: -2;
-    --flow-text-sm: -1;
-    --flow-text-base: 0;
-    --flow-text-lg: 1;
-    --flow-text-xl: 2;
-    --flow-text-2xl: 3;
-    --flow-text-3xl: 4;
-    --flow-text-4xl: 5;
-    --flow-text-5xl: 6;
-    --flow-text-6xl: 7;
-    --flow-text-7xl: 8;
-    --flow-text-8xl: 9;
-    --flow-text-9xl: 10;
-
-    --flow-line-height-xs: 1.6;
-    --flow-line-height-sm: 1.6;
-    --flow-line-height-base: 1.6;
-    --flow-line-height-lg: 1.6;
-    --flow-line-height-xl: 1.2;
-    --flow-line-height-2xl: 1.2;
-    --flow-line-height-3xl: 1.2;
-    --flow-line-height-4xl: 1.1;
-    --flow-line-height-5xl: 1.1;
-    --flow-line-height-6xl: 1.1;
-    --flow-line-height-7xl: 1;
-    --flow-line-height-8xl: 1;
-    --flow-line-height-9xl: 1;
-}
-```
-
-## Contributing
-
-This project uses [Bun](https://bun.sh) as a runtime, test runner and bundler.
-
-Thanks for wanting to help out! Here's the setup you'll have to do:
-
-Clone the project
-
-```bash
-git clone git@github.com:MarioMH8/tailwindcss-flow-type.git
-```
-
-Go to the project directory
-
-```bash
-cd tailwindcss-flow-type
-```
-
-Install dependencies
-
-```bash
-bun install
-```
-
-Compile the project
-
-```bash
-bun run build
-```
-
-You can read the full [contribution](./CONTRIBUTING.md) guidelines.
-
-## MIT License
-
-[Copyright 2021-2025 MarioMH](./LICENSE)
+MIT
