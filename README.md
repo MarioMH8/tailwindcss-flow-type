@@ -97,23 +97,34 @@ export default config;
 
 ### CSS token configuration
 
-Tailwind's `@plugin` directive accepts only flat declarations. It can configure the utility namespace and whether to replace Tailwind's standard text scale. Define modular tokens in CSS with `@theme` using `--flow-token-*`; their value is the exponent in the configured modular scale. Add a matching `--flow-line-height-*` variable when the token needs a default line-height.
+Tailwind's `@plugin` directive accepts only flat declarations. The plugin normalizes those declarations into the same scale model used by TypeScript. Define tokens in CSS with `@theme` variables.
 
 ```css
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-flow-type' {
   namespace: flow-text;
+  scale-base-min: 1rem;
+  scale-base-max: 1.25rem;
+  scale-ratio-min: 1.125;
+  scale-ratio-max: 1.2;
+  scale-viewport-min: 20rem;
+  scale-viewport-max: 96rem;
 }
 
 @theme {
+  /* Modular tokens */
   --flow-token-body: 0;
   --flow-token-heading: 3;
-  --flow-token-display: 6;
-
   --flow-line-height-body: 1.6;
   --flow-line-height-heading: 1.15;
-  --flow-line-height-display: 1;
+
+  /* Explicit tokens */
+  --flow-size-display-min: 3rem;
+  --flow-size-display-max: 7rem;
+  --flow-line-height-display-min: 0.9;
+  --flow-line-height-display-max: 1;
+  --flow-letter-spacing-display: -0.04em;
 }
 ```
 
@@ -124,10 +135,15 @@ This produces `flow-text-body`, `flow-text-heading`, and `flow-text-display`. CS
 | Need | CSS API | Notes |
 |---|---|---|
 | Custom utility namespace | `@plugin { namespace: flow-text; }` | Produces `flow-text-*` classes. |
-| Replace `text-xs` through `text-9xl` | `@plugin { replaceDefaultTextScale: true; }` | Uses the bundled fluid replacement scale. |
+| Replace `text-xs` through `text-9xl` | `@plugin { replace-default-text-scale: true; }` | Uses the bundled fluid replacement scale. |
+| Base scale | `scale-base-min` / `scale-base-max` | Complete CSS lengths. |
+| Modular ratios | `scale-ratio-min` / `scale-ratio-max` | Positive finite numbers. |
+| Viewport range | `scale-viewport-min` / `scale-viewport-max` | Complete CSS lengths. |
 | Modular token | `--flow-token-name: exponent` | The exponent is a finite number, for example `3`. |
+| Explicit token size | `--flow-size-name-min` / `--flow-size-name-max` | Both values are required. |
 | Token line-height | `--flow-line-height-name: value` | Optional fixed CSS value. |
-| Custom scale, explicit size, fluid line-height, or letter-spacing | Not supported in CSS | Use the JavaScript plugin API. |
+| Fluid token line-height | `--flow-line-height-name-min` / `--flow-line-height-name-max` | Both values are required. |
+| Token letter-spacing | `--flow-letter-spacing-name: value` | Optional fixed CSS value. |
 
 For example, this opt-in configuration replaces Tailwind's default `text-base`, then overrides that token from CSS:
 
@@ -144,7 +160,7 @@ For example, this opt-in configuration replaces Tailwind's default `text-base`, 
 
 ### JavaScript plugin options
 
-Use JavaScript configuration when the scale itself must change or a token cannot be described by a modular exponent. Tailwind cannot pass nested objects through `@plugin`, which is why this surface is TypeScript-only.
+The JavaScript API uses nested objects instead of CSS variables, but exposes the same configuration model. It is useful when configuration belongs in a shared TypeScript file or is generated programmatically.
 
 | Option                    | Type                    | Default                 | Description                                                               |
 |---------------------------|-------------------------|-------------------------|---------------------------------------------------------------------------|
