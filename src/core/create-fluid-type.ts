@@ -1,4 +1,4 @@
-import type { FlowRange, FlowScale, FlowTypographyToken, FluidTypographyProperties } from './types';
+import type { FlowRange, FlowScale, FlowTypographyToken, FluidTypographyProperties } from '@/core/types';
 
 interface ComparableLength {
 	unit: string;

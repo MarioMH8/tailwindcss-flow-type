@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 
-import { createFluidTypographyToken, createFluidValue, createModularScaleValue } from '../../src/core';
+import { createFluidTypographyToken, createFluidValue, createModularScaleValue } from '@/core';
 
 describe('fluid typography core', () => {
 	describe('createFluidValue', () => {
