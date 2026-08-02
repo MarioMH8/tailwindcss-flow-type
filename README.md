@@ -97,7 +97,7 @@ export default config;
 
 ### CSS token configuration
 
-The JavaScript plugin accepts flat options through `@plugin`. Define modular tokens in CSS with `@theme` using `--flow-token-*`; their value is the exponent in the configured modular scale. Add a matching `--flow-line-height-*` variable when the token needs a default line-height.
+Tailwind's `@plugin` directive accepts only flat declarations. It can configure the utility namespace and whether to replace Tailwind's standard text scale. Define modular tokens in CSS with `@theme` using `--flow-token-*`; their value is the exponent in the configured modular scale. Add a matching `--flow-line-height-*` variable when the token needs a default line-height.
 
 ```css
 @import 'tailwindcss';
@@ -119,7 +119,32 @@ The JavaScript plugin accepts flat options through `@plugin`. Define modular tok
 
 This produces `flow-text-body`, `flow-text-heading`, and `flow-text-display`. CSS-defined tokens override JavaScript tokens with the same name.
 
-### Plugin options
+#### CSS configuration surface
+
+| Need | CSS API | Notes |
+|---|---|---|
+| Custom utility namespace | `@plugin { namespace: flow-text; }` | Produces `flow-text-*` classes. |
+| Replace `text-xs` through `text-9xl` | `@plugin { replaceDefaultTextScale: true; }` | Uses the bundled fluid replacement scale. |
+| Modular token | `--flow-token-name: exponent` | The exponent is a finite number, for example `3`. |
+| Token line-height | `--flow-line-height-name: value` | Optional fixed CSS value. |
+| Custom scale, explicit size, fluid line-height, or letter-spacing | Not supported in CSS | Use the JavaScript plugin API. |
+
+For example, this opt-in configuration replaces Tailwind's default `text-base`, then overrides that token from CSS:
+
+```css
+@plugin 'tailwindcss-flow-type' {
+  replaceDefaultTextScale: true;
+}
+
+@theme {
+  --flow-token-base: 1;
+  --flow-line-height-base: 1.4;
+}
+```
+
+### JavaScript plugin options
+
+Use JavaScript configuration when the scale itself must change or a token cannot be described by a modular exponent. Tailwind cannot pass nested objects through `@plugin`, which is why this surface is TypeScript-only.
 
 | Option                    | Type                    | Default                 | Description                                                               |
 |---------------------------|-------------------------|-------------------------|---------------------------------------------------------------------------|
