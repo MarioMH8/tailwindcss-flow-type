@@ -2,6 +2,8 @@
 
 import './style.css';
 
+import type { FlowScale } from '@flow/core';
+import { createFluidValue, createModularScaleValue } from '@flow/core';
 import { Pane } from 'tweakpane';
 
 const TOKEN_MODE_OPTIONS = {
@@ -43,7 +45,6 @@ interface DemoState {
 	replaceDefaultTextScale: boolean;
 	ratioMax: number;
 	ratioMin: number;
-	previewViewport: number;
 	tokens: DemoToken[];
 	viewportMax: number;
 	viewportMin: number;
@@ -51,7 +52,6 @@ interface DemoState {
 
 const state: DemoState = {
 	...DEFAULT_CONFIG,
-	previewViewport: 80,
 	tokens: [
 		{
 			letterSpacing: '-0.04em',
@@ -108,12 +108,9 @@ function getElement<T extends HTMLElement>(selector: string): T {
 }
 
 const paneElement = getElement<HTMLElement>('#pane');
-const viewportStage = getElement<HTMLElement>('#viewport-stage');
-const previewPanel = getElement<HTMLElement>('#preview');
 const specimenElement = getElement<HTMLElement>('#specimen');
 const outputElement = getElement<HTMLElement>('#css-output');
 const viewportElement = getElement<HTMLElement>('#viewport-readout');
-const viewportHandle = getElement<HTMLButtonElement>('#viewport-handle');
 const copyButton = getElement<HTMLButtonElement>('#copy');
 const copyStatusElement = getElement<HTMLElement>('#copy-status');
 const controlPanel = getElement<HTMLElement>('#control-panel');
@@ -124,29 +121,27 @@ const closeCssButton = getElement<HTMLButtonElement>('#close-css');
 const cssDialog = getElement<HTMLDialogElement>('#css-dialog');
 const themeToggleButton = getElement<HTMLButtonElement>('#theme-toggle');
 
-function getTokenFontSize(token: DemoToken): string {
-	const range =
-		token.mode === 'modular'
-			? {
-					max: state.baseMax * state.ratioMax ** token.scale,
-					min: state.baseMin * state.ratioMin ** token.scale,
-				}
-			: { max: token.sizeMax, min: token.sizeMin };
+function getScale(): FlowScale {
+	return {
+		base: { max: `${state.baseMax}rem`, min: `${state.baseMin}rem` },
+		ratio: { max: state.ratioMax, min: state.ratioMin },
+		viewport: { max: `${state.viewportMax}rem`, min: `${state.viewportMin}rem` },
+	};
+}
 
-	return `${getInterpolatedValue(range.min, range.max)}rem`;
+function getTokenFontSize(token: DemoToken): string {
+	return token.mode === 'modular'
+		? createModularScaleValue(token.scale, getScale())
+		: createFluidValue({ max: `${token.sizeMax}rem`, min: `${token.sizeMin}rem` }, getScale().viewport);
 }
 
 function getTokenLineHeight(token: DemoToken): string {
 	return token.lineHeightMode === 'fixed'
 		? token.lineHeight.toString()
-		: getInterpolatedValue(token.lineHeightMin, token.lineHeightMax).toString();
-}
-
-function getInterpolatedValue(min: number, max: number): number {
-	const range = state.viewportMax - state.viewportMin;
-	const progress = Math.min(Math.max((state.previewViewport - state.viewportMin) / range, 0), 1);
-
-	return min + (max - min) * progress;
+		: createFluidValue(
+				{ max: token.lineHeightMax.toString(), min: token.lineHeightMin.toString() },
+				getScale().viewport
+			);
 }
 
 function createCssConfig(): string {
@@ -222,21 +217,8 @@ function renderSpecimen(): void {
 
 function render(): void {
 	outputElement.textContent = createCssConfig();
-	previewPanel.style.width = `${getViewportWidthPercent()}%`;
-	viewportElement.textContent = `${Math.round(state.previewViewport)}rem · ${Math.round(state.previewViewport * 16)}px`;
+	viewportElement.textContent = `${Math.round(window.innerWidth)}px · ${(window.innerWidth / 16).toFixed(1)}rem`;
 	renderSpecimen();
-}
-
-function getViewportWidthPercent(): number {
-	return 28 + ((state.previewViewport - 10) / (160 - 10)) * 72;
-}
-
-function setViewportFromPointer(clientX: number): void {
-	const bounds = viewportStage.getBoundingClientRect();
-	const percentage = Math.min(Math.max(((clientX - bounds.left) / bounds.width) * 100, 28), 100);
-
-	state.previewViewport = 10 + ((percentage - 28) / 72) * (160 - 10);
-	render();
 }
 
 function setControlsOpen(isOpen: boolean): void {
@@ -336,19 +318,6 @@ copyButton.addEventListener('click', async () => {
 	}
 });
 
-viewportHandle.addEventListener('pointerdown', event => {
-	viewportHandle.setPointerCapture(event.pointerId);
-	setViewportFromPointer(event.clientX);
-});
-viewportHandle.addEventListener('pointermove', event => {
-	if (viewportHandle.hasPointerCapture(event.pointerId)) {
-		setViewportFromPointer(event.clientX);
-	}
-});
-viewportHandle.addEventListener('pointerup', event => {
-	viewportHandle.releasePointerCapture(event.pointerId);
-});
-
 openControlsButton.addEventListener('click', () => setControlsOpen(true));
 closeControlsButton.addEventListener('click', () => setControlsOpen(false));
 openCssButton.addEventListener('click', () => cssDialog.showModal());
@@ -373,6 +342,6 @@ themeToggleButton.addEventListener('click', () => {
 });
 
 setTheme(localStorage.getItem('flow-type-demo-theme') === 'dark' ? 'dark' : 'light');
-window.addEventListener('resize', render);
+new ResizeObserver(render).observe(document.documentElement);
 createPane();
 render();
