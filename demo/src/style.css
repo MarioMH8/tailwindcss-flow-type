@@ -4,7 +4,10 @@
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
   --accent: #e4532d;
+  --accent-foreground: #fff;
   --canvas: #f4f1e9;
+  --control-background: #151515;
+  --control-foreground: #fff;
   --ink: #151515;
   --muted: #817d75;
   --panel: #fffdf8;
@@ -16,7 +19,10 @@
   color: #f3eee6;
   background: #161616;
   --accent: #ff7a4f;
+  --accent-foreground: #24120c;
   --canvas: #161616;
+  --control-background: #f3eee6;
+  --control-foreground: #161616;
   --ink: #f3eee6;
   --muted: #aaa49a;
   --panel: #1f1e1c;
@@ -204,8 +210,8 @@ input {
   place-items: center;
   min-width: 2.75rem;
   min-height: 2.75rem;
-  color: #fff;
-  background: var(--ink);
+  color: var(--control-foreground);
+  background: var(--control-background);
   border: 1px solid transparent;
   border-radius: 99px;
   cursor: pointer;
@@ -220,7 +226,7 @@ input {
 .floating-button:hover,
 .copy-button:hover,
 .icon-button:hover {
-  color: #fff;
+  color: var(--accent-foreground);
   background: var(--accent);
 }
 
@@ -267,13 +273,13 @@ input {
 
 .copy-button {
   padding: 0 1rem;
-  color: #fff;
+  color: var(--accent-foreground);
   background: var(--accent);
 }
 
 .icon-button {
-  color: inherit;
-  background: color-mix(in srgb, currentColor 10%, transparent);
+  color: var(--control-foreground);
+  background: color-mix(in srgb, var(--control-background) 12%, transparent);
   box-shadow: none;
   font-size: 1.5rem;
   line-height: 1;
