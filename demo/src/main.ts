@@ -25,6 +25,7 @@ const DEFAULT_CONFIG = {
 type TokenMode = (typeof TOKEN_MODE_OPTIONS)[keyof typeof TOKEN_MODE_OPTIONS];
 
 interface DemoToken {
+	fontWeight: number;
 	letterSpacing: string;
 	lineHeightMax: number;
 	lineHeightMin: number;
@@ -54,6 +55,7 @@ const state: DemoState = {
 	...DEFAULT_CONFIG,
 	tokens: [
 		{
+			fontWeight: 700,
 			letterSpacing: '-0.04em',
 			lineHeight: 1,
 			lineHeightMax: 1,
@@ -67,6 +69,7 @@ const state: DemoState = {
 			text: 'Type that follows the room.',
 		},
 		{
+			fontWeight: 600,
 			letterSpacing: '-0.025em',
 			lineHeight: 1.15,
 			lineHeightMax: 1.15,
@@ -80,6 +83,7 @@ const state: DemoState = {
 			text: 'Typography with a pulse.',
 		},
 		{
+			fontWeight: 400,
 			letterSpacing: '',
 			lineHeight: 1.6,
 			lineHeightMax: 1.6,
@@ -205,6 +209,7 @@ function renderSpecimen(): void {
 
 		card.className = 'token-card';
 		card.style.fontSize = getTokenFontSize(token);
+		card.style.fontWeight = token.fontWeight.toString();
 		card.style.lineHeight = getTokenLineHeight(token);
 		card.style.letterSpacing = token.letterSpacing;
 		label.className = 'token-label';
@@ -255,6 +260,7 @@ function createPane(): void {
 		pane.addButton({ title: `Token / ${token.name || 'untitled'}` });
 		pane.addBinding(token, 'name').on('change', render);
 		pane.addBinding(token, 'mode', { options: TOKEN_MODE_OPTIONS }).on('change', render);
+		pane.addBinding(token, 'fontWeight', { label: 'weight', max: 900, min: 100, step: 100 }).on('change', render);
 		pane.addBinding(token, 'scale', { max: 12, min: -4, step: 1 }).on('change', render);
 		pane.addBinding(token, 'sizeMin', { label: 'size / min', max: 12, min: 0.25, step: 0.125 }).on(
 			'change',
@@ -288,6 +294,7 @@ function createPane(): void {
 
 	pane.addButton({ title: 'Add modular token' }).on('click', () => {
 		state.tokens.push({
+			fontWeight: 500,
 			letterSpacing: '',
 			lineHeight: 1.4,
 			lineHeightMax: 1.4,
