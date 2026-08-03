@@ -11,9 +11,10 @@ export default defineConfig({
 		outDir: path.resolve(directory, 'dist'),
 	},
 	resolve: {
-		alias: {
-			'@flow': path.resolve(directory, '../src'),
-		},
+		alias: [
+			{ find: '@flow', replacement: path.resolve(directory, '../src') },
+			{ find: '@', replacement: path.resolve(directory, '../src') },
+		],
 	},
 	root: directory,
 });
