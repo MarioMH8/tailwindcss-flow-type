@@ -108,10 +108,12 @@ function getElement<T extends HTMLElement>(selector: string): T {
 }
 
 const paneElement = getElement<HTMLElement>('#pane');
+const viewportStage = getElement<HTMLElement>('#viewport-stage');
+const previewPanel = getElement<HTMLElement>('#preview');
 const specimenElement = getElement<HTMLElement>('#specimen');
 const outputElement = getElement<HTMLElement>('#css-output');
 const viewportElement = getElement<HTMLElement>('#viewport-readout');
-const previewViewportInput = getElement<HTMLInputElement>('#preview-viewport');
+const viewportHandle = getElement<HTMLButtonElement>('#viewport-handle');
 const copyButton = getElement<HTMLButtonElement>('#copy');
 const copyStatusElement = getElement<HTMLElement>('#copy-status');
 const controlPanel = getElement<HTMLElement>('#control-panel');
@@ -220,8 +222,21 @@ function renderSpecimen(): void {
 
 function render(): void {
 	outputElement.textContent = createCssConfig();
-	viewportElement.textContent = `${Math.round(state.previewViewport * 16)}px`;
+	previewPanel.style.width = `${getViewportWidthPercent()}%`;
+	viewportElement.textContent = `${Math.round(state.previewViewport)}rem`;
 	renderSpecimen();
+}
+
+function getViewportWidthPercent(): number {
+	return 28 + ((state.previewViewport - 10) / (160 - 10)) * 72;
+}
+
+function setViewportFromPointer(clientX: number): void {
+	const bounds = viewportStage.getBoundingClientRect();
+	const percentage = Math.min(Math.max(((clientX - bounds.left) / bounds.width) * 100, 28), 100);
+
+	state.previewViewport = 10 + ((percentage - 28) / 72) * (160 - 10);
+	render();
 }
 
 function setControlsOpen(isOpen: boolean): void {
@@ -321,13 +336,17 @@ copyButton.addEventListener('click', async () => {
 	}
 });
 
-previewViewportInput.addEventListener('input', () => {
-	const value = Number(previewViewportInput.value);
-
-	if (Number.isFinite(value)) {
-		state.previewViewport = Math.min(Math.max(value, 10), 160);
-		render();
+viewportHandle.addEventListener('pointerdown', event => {
+	viewportHandle.setPointerCapture(event.pointerId);
+	setViewportFromPointer(event.clientX);
+});
+viewportHandle.addEventListener('pointermove', event => {
+	if (viewportHandle.hasPointerCapture(event.pointerId)) {
+		setViewportFromPointer(event.clientX);
 	}
+});
+viewportHandle.addEventListener('pointerup', event => {
+	viewportHandle.releasePointerCapture(event.pointerId);
 });
 
 openControlsButton.addEventListener('click', () => setControlsOpen(true));
