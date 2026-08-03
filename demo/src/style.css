@@ -36,6 +36,11 @@
   box-sizing: border-box;
 }
 
+::selection {
+  color: var(--canvas);
+  background: var(--ink);
+}
+
 body {
   min-width: 320px;
   min-height: 100vh;
