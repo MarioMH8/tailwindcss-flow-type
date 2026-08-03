@@ -20,6 +20,7 @@
 ## Table of Contents
 
 - [Installation](#installation)
+- [Demo](#demo)
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [Migration](#migration)
@@ -37,6 +38,20 @@ npm install tailwindcss-flow-type
 
 ```bash
 bun add tailwindcss-flow-type
+```
+
+## Demo
+
+Launch the interactive configuration laboratory locally:
+
+```bash
+bun run demo
+```
+
+Build the static demo bundle:
+
+```bash
+bun run demo:build
 ```
 
 ## Usage
