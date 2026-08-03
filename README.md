@@ -42,6 +42,8 @@ bun add tailwindcss-flow-type
 
 ## Demo
 
+Try the published [interactive configuration laboratory](https://mariomh8.github.io/tailwindcss-flow-type/).
+
 Launch the interactive configuration laboratory locally:
 
 ```bash
