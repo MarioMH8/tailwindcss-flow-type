@@ -12,6 +12,11 @@
     <main class="laboratory">
       <section class="preview-panel" id="preview" tabindex="-1" aria-label="Fluid typography specimen">
         <div class="preview-meta">
+          <label class="viewport-control" for="preview-viewport">
+            <span>viewport</span>
+            <input id="preview-viewport" type="number" min="10" max="160" step="1" value="80" />
+            <span>rem</span>
+          </label>
           <span id="viewport-readout" class="viewport-readout"></span>
         </div>
         <div id="specimen" class="specimen" aria-live="polite"></div>

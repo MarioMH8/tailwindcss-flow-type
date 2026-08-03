@@ -1,9 +1,7 @@
-/* eslint-disable typescript/member-ordering, typescript/no-misused-promises, typescript/no-unnecessary-type-parameters, typescript/restrict-template-expressions, unicorn/prefer-observer-apis -- The demo serializes numeric controls and binds browser events directly. */
+/* eslint-disable typescript/member-ordering, typescript/no-misused-promises, typescript/no-unnecessary-type-parameters, typescript/restrict-template-expressions -- The demo serializes numeric controls and binds browser events directly. */
 
 import './style.css';
 
-import type { FlowScale } from '@flow/core';
-import { createFluidValue, createModularScaleValue } from '@flow/core';
 import { Pane } from 'tweakpane';
 
 const TOKEN_MODE_OPTIONS = {
@@ -35,6 +33,7 @@ interface DemoToken {
 	scale: number;
 	sizeMax: number;
 	sizeMin: number;
+	text: string;
 }
 
 interface DemoState {
@@ -44,6 +43,7 @@ interface DemoState {
 	replaceDefaultTextScale: boolean;
 	ratioMax: number;
 	ratioMin: number;
+	previewViewport: number;
 	tokens: DemoToken[];
 	viewportMax: number;
 	viewportMin: number;
@@ -51,6 +51,7 @@ interface DemoState {
 
 const state: DemoState = {
 	...DEFAULT_CONFIG,
+	previewViewport: 80,
 	tokens: [
 		{
 			letterSpacing: '',
@@ -63,6 +64,7 @@ const state: DemoState = {
 			scale: 0,
 			sizeMax: 1.25,
 			sizeMin: 1,
+			text: 'A flexible system stays precise.',
 		},
 		{
 			letterSpacing: '-0.025em',
@@ -75,6 +77,7 @@ const state: DemoState = {
 			scale: 3,
 			sizeMax: 2.16,
 			sizeMin: 1.424,
+			text: 'Typography with a pulse.',
 		},
 		{
 			letterSpacing: '-0.04em',
@@ -87,6 +90,7 @@ const state: DemoState = {
 			scale: 6,
 			sizeMax: 7,
 			sizeMin: 3,
+			text: 'Type that follows the room.',
 		},
 	],
 	viewportMax: 96,
@@ -107,6 +111,7 @@ const paneElement = getElement<HTMLElement>('#pane');
 const specimenElement = getElement<HTMLElement>('#specimen');
 const outputElement = getElement<HTMLElement>('#css-output');
 const viewportElement = getElement<HTMLElement>('#viewport-readout');
+const previewViewportInput = getElement<HTMLInputElement>('#preview-viewport');
 const copyButton = getElement<HTMLButtonElement>('#copy');
 const copyStatusElement = getElement<HTMLElement>('#copy-status');
 const controlPanel = getElement<HTMLElement>('#control-panel');
@@ -117,27 +122,29 @@ const closeCssButton = getElement<HTMLButtonElement>('#close-css');
 const cssDialog = getElement<HTMLDialogElement>('#css-dialog');
 const themeToggleButton = getElement<HTMLButtonElement>('#theme-toggle');
 
-function getScale(): FlowScale {
-	return {
-		base: { max: `${state.baseMax}rem`, min: `${state.baseMin}rem` },
-		ratio: { max: state.ratioMax, min: state.ratioMin },
-		viewport: { max: `${state.viewportMax}rem`, min: `${state.viewportMin}rem` },
-	};
-}
-
 function getTokenFontSize(token: DemoToken): string {
-	return token.mode === 'modular'
-		? createModularScaleValue(token.scale, getScale())
-		: createFluidValue({ max: `${token.sizeMax}rem`, min: `${token.sizeMin}rem` }, getScale().viewport);
+	const range =
+		token.mode === 'modular'
+			? {
+					max: state.baseMax * state.ratioMax ** token.scale,
+					min: state.baseMin * state.ratioMin ** token.scale,
+				}
+			: { max: token.sizeMax, min: token.sizeMin };
+
+	return `${getInterpolatedValue(range.min, range.max)}rem`;
 }
 
 function getTokenLineHeight(token: DemoToken): string {
 	return token.lineHeightMode === 'fixed'
 		? token.lineHeight.toString()
-		: createFluidValue(
-				{ max: token.lineHeightMax.toString(), min: token.lineHeightMin.toString() },
-				getScale().viewport
-			);
+		: getInterpolatedValue(token.lineHeightMin, token.lineHeightMax).toString();
+}
+
+function getInterpolatedValue(min: number, max: number): number {
+	const range = state.viewportMax - state.viewportMin;
+	const progress = Math.min(Math.max((state.previewViewport - state.viewportMin) / range, 0), 1);
+
+	return min + (max - min) * progress;
 }
 
 function createCssConfig(): string {
@@ -205,7 +212,7 @@ function renderSpecimen(): void {
 		card.style.letterSpacing = token.letterSpacing;
 		label.className = 'token-label';
 		label.textContent = `${state.namespace}-${token.name}`;
-		text.textContent = token.name === 'body' ? 'A flexible system stays precise.' : 'Typography with a pulse.';
+		text.textContent = token.text;
 		card.append(label, text);
 		specimenElement.append(card);
 	}
@@ -213,7 +220,7 @@ function renderSpecimen(): void {
 
 function render(): void {
 	outputElement.textContent = createCssConfig();
-	viewportElement.textContent = `${Math.round(window.innerWidth)}px viewport`;
+	viewportElement.textContent = `${Math.round(state.previewViewport * 16)}px`;
 	renderSpecimen();
 }
 
@@ -274,6 +281,7 @@ function createPane(): void {
 			render
 		);
 		pane.addBinding(token, 'letterSpacing', { label: 'tracking' }).on('change', render);
+		pane.addBinding(token, 'text', { label: 'specimen text' }).on('change', render);
 		pane.addButton({ title: 'Remove token' }).on('click', () => {
 			state.tokens = state.tokens.filter(candidate => candidate !== token);
 			createPane();
@@ -293,6 +301,7 @@ function createPane(): void {
 			scale: 2,
 			sizeMax: 2,
 			sizeMin: 1.5,
+			text: 'A new fluid token.',
 		});
 		createPane();
 		render();
@@ -309,6 +318,15 @@ copyButton.addEventListener('click', async () => {
 		}, 1600);
 	} catch {
 		copyStatusElement.textContent = 'Clipboard access is unavailable. Select the code and copy it manually.';
+	}
+});
+
+previewViewportInput.addEventListener('input', () => {
+	const value = Number(previewViewportInput.value);
+
+	if (Number.isFinite(value)) {
+		state.previewViewport = Math.min(Math.max(value, 10), 160);
+		render();
 	}
 });
 

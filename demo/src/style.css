@@ -94,6 +94,28 @@ input {
   text-transform: uppercase;
 }
 
+.viewport-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+}
+
+.viewport-control input {
+  width: 4.5rem;
+  padding: 0.35rem 0.45rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 0.35rem;
+  font: inherit;
+}
+
+.viewport-control input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .viewport-readout {
   padding: 0.45rem 0.65rem;
   color: var(--accent);
@@ -122,6 +144,19 @@ input {
 
 .token-card:hover {
   color: var(--ink);
+  transform: translateX(0.75rem);
+}
+
+.token-card:hover .token-label {
+  color: var(--accent);
+  letter-spacing: 0.17em;
+}
+
+.token-card:hover > p:last-child {
+  text-decoration-color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.12em;
 }
 
 .token-card.selected {
@@ -339,6 +374,10 @@ pre {
   .preview-meta {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .viewport-control {
+    width: 100%;
   }
 
   .floating-actions {
