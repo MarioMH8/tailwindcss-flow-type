@@ -56,6 +56,12 @@ Build the static demo bundle:
 bun run demo:build
 ```
 
+After the Pages workflow has reached `main`, deploy the demo manually from a local terminal:
+
+```bash
+gh workflow run ci.yml --ref main
+```
+
 ## Usage
 
 ### CSS plugin
