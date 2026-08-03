@@ -1,32 +1,32 @@
 :root {
-  color: #151515;
-  background: #f4f1e9;
+  color: #0d0d0d;
+  background: #fbfbfb;
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
-  --accent: #e4532d;
+  --accent: #111;
   --accent-foreground: #fff;
-  --canvas: #f4f1e9;
+  --canvas: #fbfbfb;
   --control-background: #151515;
   --control-foreground: #fff;
   --ink: #151515;
-  --muted: #817d75;
-  --panel: #fffdf8;
-  --rule: #d9d3c8;
-  --shadow: rgb(39 28 16 / 0.12);
+  --muted: #777;
+  --panel: rgb(255 255 255 / 0.74);
+  --rule: #dedede;
+  --shadow: rgb(0 0 0 / 0.16);
 }
 
 :root[data-theme='dark'] {
-  color: #f3eee6;
-  background: #161616;
-  --accent: #ff7a4f;
-  --accent-foreground: #24120c;
-  --canvas: #161616;
-  --control-background: #f3eee6;
-  --control-foreground: #161616;
-  --ink: #f3eee6;
-  --muted: #aaa49a;
-  --panel: #1f1e1c;
-  --rule: #3a3732;
+  color: #f4f4f4;
+  background: #111;
+  --accent: #f4f4f4;
+  --accent-foreground: #111;
+  --canvas: #111;
+  --control-background: #f4f4f4;
+  --control-foreground: #111;
+  --ink: #f4f4f4;
+  --muted: #999;
+  --panel: rgb(25 25 25 / 0.76);
+  --rule: #363636;
   --shadow: rgb(0 0 0 / 0.35);
 }
 
@@ -39,9 +39,26 @@ body {
   min-height: 100vh;
   margin: 0;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 27rem),
-    var(--canvas);
+  background: var(--canvas);
+}
+
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: -2rem;
+  content: '';
+  background-image:
+    linear-gradient(rgb(0 0 0 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(0 0 0 / 0.06) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  filter: blur(0.35px);
+  mask-image: radial-gradient(ellipse at center, black 15%, transparent 76%);
+}
+
+:root[data-theme='dark'] body::before {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.08) 1px, transparent 1px);
 }
 
 button,
@@ -86,8 +103,9 @@ input {
   overflow: hidden;
   background: var(--panel);
   border: 1px solid var(--rule);
-  border-radius: clamp(1.25rem, 3vw, 2rem);
-  box-shadow: 0 2rem 5rem var(--shadow);
+  border-radius: 4px;
+  box-shadow: 0 1.5rem 4rem var(--shadow);
+  backdrop-filter: blur(14px);
   transition: width 100ms ease-out;
 }
 
@@ -124,7 +142,7 @@ input {
   height: 4rem;
   content: '';
   background: var(--accent);
-  border-radius: 99px;
+  border-radius: 2px;
   box-shadow: 0 0 0 0.3rem color-mix(in srgb, var(--accent) 15%, transparent);
   transform: translate(-50%, -50%);
 }
@@ -136,9 +154,9 @@ input {
 
 .viewport-readout {
   padding: 0.45rem 0.65rem;
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-  border-radius: 99px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border-radius: 2px;
   white-space: nowrap;
 }
 
@@ -155,26 +173,6 @@ input {
   padding: 0.2rem 0 1rem;
   color: color-mix(in srgb, var(--ink) 58%, transparent);
   border-bottom: 1px solid var(--rule);
-  cursor: pointer;
-  outline: none;
-  transition: color 160ms ease, transform 160ms ease;
-}
-
-.token-card:hover {
-  color: var(--ink);
-  transform: translateX(0.75rem);
-}
-
-.token-card:hover .token-label {
-  color: var(--accent);
-  letter-spacing: 0.17em;
-}
-
-.token-card:hover > p:last-child {
-  text-decoration-color: var(--accent);
-  text-decoration-line: underline;
-  text-decoration-thickness: 0.06em;
-  text-underline-offset: 0.12em;
 }
 
 .token-card.selected {
@@ -182,12 +180,12 @@ input {
   max-width: 100%;
   padding: clamp(1rem, 5vw, 4rem) 0;
   color: var(--ink);
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--ink);
 }
 
 .token-label {
   margin-bottom: 0.55rem;
-  color: var(--accent);
+  color: var(--muted);
   font-family: ui-monospace, monospace;
   font-size: 0.72rem;
   font-weight: 700;
@@ -209,7 +207,7 @@ input {
   padding: 1.25rem;
   overflow-y: auto;
   color: #e7ebef;
-  background: #202832;
+  background: rgb(15 15 15 / 0.94);
   box-shadow: 1rem 0 3rem rgb(0 0 0 / 0.2);
   transform: translateX(-105%);
   transition: transform 220ms ease;
@@ -231,7 +229,7 @@ input {
   justify-content: space-between;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #46525e;
+  border-bottom: 1px solid #3b3b3b;
 }
 
 .eyebrow {
@@ -261,7 +259,7 @@ input {
   color: var(--control-foreground);
   background: var(--control-background);
   border: 1px solid transparent;
-  border-radius: 99px;
+  border-radius: 3px;
   cursor: pointer;
   font-weight: 700;
   box-shadow: 0 0.6rem 1.5rem var(--shadow);
@@ -292,13 +290,14 @@ input {
   color: #e5e8ea;
   background: #191e26;
   border: 1px solid #46525e;
-  border-radius: 1rem;
-  box-shadow: 0 2rem 5rem rgb(0 0 0 / 0.45);
+  border-radius: 4px;
+  box-shadow: 0 2.5rem 7rem rgb(0 0 0 / 0.55);
+  backdrop-filter: blur(24px);
 }
 
 .css-dialog::backdrop {
-  background: rgb(10 10 10 / 0.62);
-  backdrop-filter: blur(6px);
+  background: rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(16px);
 }
 
 .code-heading {
@@ -340,7 +339,7 @@ pre {
   overflow: auto;
   color: #c9d4dd;
   background: #11161d;
-  border-radius: 0.7rem;
+  border-radius: 2px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.78rem;
   line-height: 1.65;
@@ -350,7 +349,7 @@ pre {
 .copy-status {
   min-height: 1.25rem;
   margin: 0.75rem 0 0;
-  color: #f5c68b;
+  color: #f4f4f4;
   font-size: 0.8rem;
 }
 
@@ -362,20 +361,20 @@ pre {
   --tp-base-background-color: transparent;
   --tp-base-shadow-color: transparent;
   --tp-button-background-color: var(--accent);
-  --tp-button-background-color-active: #b83b1f;
+  --tp-button-background-color-active: #bbb;
   --tp-button-background-color-focus: var(--accent);
-  --tp-button-background-color-hover: #f26e47;
-  --tp-container-background-color: #2c3744;
-  --tp-container-background-color-active: #394754;
-  --tp-container-background-color-focus: #394754;
-  --tp-container-background-color-hover: #35414e;
-  --tp-container-foreground-color: #e7ebef;
+  --tp-button-background-color-hover: #ddd;
+  --tp-container-background-color: #242424;
+  --tp-container-background-color-active: #353535;
+  --tp-container-background-color-focus: #353535;
+  --tp-container-background-color-hover: #303030;
+  --tp-container-foreground-color: #f4f4f4;
   --tp-groove-foreground-color: var(--accent);
-  --tp-input-background-color: #121820;
-  --tp-input-foreground-color: #f5c68b;
-  --tp-label-foreground-color: #b5c0ca;
-  --tp-monitor-background-color: #121820;
-  --tp-monitor-foreground-color: #f5c68b;
+  --tp-input-background-color: #111;
+  --tp-input-foreground-color: #f4f4f4;
+  --tp-label-foreground-color: #b0b0b0;
+  --tp-monitor-background-color: #111;
+  --tp-monitor-foreground-color: #f4f4f4;
 }
 
 @media (max-width: 640px) {

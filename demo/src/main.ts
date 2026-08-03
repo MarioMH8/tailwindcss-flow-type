@@ -223,7 +223,7 @@ function renderSpecimen(): void {
 function render(): void {
 	outputElement.textContent = createCssConfig();
 	previewPanel.style.width = `${getViewportWidthPercent()}%`;
-	viewportElement.textContent = `${Math.round(state.previewViewport)}rem`;
+	viewportElement.textContent = `${Math.round(state.previewViewport)}rem · ${Math.round(state.previewViewport * 16)}px`;
 	renderSpecimen();
 }
 
