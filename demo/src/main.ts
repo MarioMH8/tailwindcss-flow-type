@@ -117,9 +117,6 @@ const outputElement = getElement<HTMLElement>('#css-output');
 const viewportElement = getElement<HTMLElement>('#viewport-readout');
 const copyButton = getElement<HTMLButtonElement>('#copy');
 const copyStatusElement = getElement<HTMLElement>('#copy-status');
-const controlPanel = getElement<HTMLElement>('#control-panel');
-const openControlsButton = getElement<HTMLButtonElement>('#open-controls');
-const closeControlsButton = getElement<HTMLButtonElement>('#close-controls');
 const openCssButton = getElement<HTMLButtonElement>('#open-css');
 const closeCssButton = getElement<HTMLButtonElement>('#close-css');
 const cssDialog = getElement<HTMLDialogElement>('#css-dialog');
@@ -226,16 +223,6 @@ function render(): void {
 	renderSpecimen();
 }
 
-function setControlsOpen(isOpen: boolean): void {
-	controlPanel.classList.toggle('is-open', isOpen);
-	controlPanel.setAttribute('aria-hidden', (!isOpen).toString());
-	openControlsButton.setAttribute('aria-expanded', isOpen.toString());
-
-	if (isOpen) {
-		setTimeout(() => paneElement.querySelector<HTMLElement>('input')?.focus(), 0);
-	}
-}
-
 function setTheme(theme: 'dark' | 'light'): void {
 	document.documentElement.dataset['theme'] = theme;
 	themeToggleButton.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
@@ -245,7 +232,7 @@ function setTheme(theme: 'dark' | 'light'): void {
 
 function createPane(): void {
 	paneElement.replaceChildren();
-	const pane = new Pane({ container: paneElement, title: 'Flow controls' });
+	const pane = new Pane({ container: paneElement, expanded: false, title: 'Flow controls' });
 
 	pane.addBinding(state, 'baseMin', { label: 'base / min', max: 3, min: 0.5, step: 0.025 }).on('change', render);
 	pane.addBinding(state, 'baseMax', { label: 'base / max', max: 4, min: 0.5, step: 0.025 }).on('change', render);
@@ -325,20 +312,8 @@ copyButton.addEventListener('click', async () => {
 	}
 });
 
-openControlsButton.addEventListener('click', () => setControlsOpen(true));
-closeControlsButton.addEventListener('click', () => setControlsOpen(false));
 openCssButton.addEventListener('click', () => cssDialog.showModal());
 closeCssButton.addEventListener('click', () => cssDialog.close());
-document.addEventListener('pointerdown', event => {
-	if (
-		controlPanel.classList.contains('is-open') &&
-		event.target instanceof Node &&
-		!controlPanel.contains(event.target) &&
-		!openControlsButton.contains(event.target)
-	) {
-		setControlsOpen(false);
-	}
-});
 cssDialog.addEventListener('click', event => {
 	if (event.target === cssDialog) {
 		cssDialog.close();
