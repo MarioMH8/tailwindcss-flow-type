@@ -9,11 +9,28 @@
   --canvas: #fbfbfb;
   --control-background: #151515;
   --control-foreground: #fff;
+  --control-panel-background: rgb(255 255 255 / 0.94);
+  --control-panel-foreground: #111;
+  --dialog-background: rgb(255 255 255 / 0.9);
+  --dialog-code-background: #f3f3f3;
+  --dialog-code-foreground: #111;
+  --dialog-foreground: #111;
+  --dialog-status: #555;
   --ink: #151515;
   --muted: #777;
   --panel: rgb(255 255 255 / 0.74);
   --rule: #dedede;
   --shadow: rgb(0 0 0 / 0.16);
+  --tweak-button: #111;
+  --tweak-button-foreground: #fff;
+  --tweak-button-active: #333;
+  --tweak-button-hover: #222;
+  --tweak-container: #f0f0f0;
+  --tweak-container-active: #ddd;
+  --tweak-container-hover: #e6e6e6;
+  --tweak-foreground: #111;
+  --tweak-input: #fff;
+  --tweak-label: #555;
 }
 
 :root[data-theme='dark'] {
@@ -25,11 +42,28 @@
   --canvas: #111;
   --control-background: #f4f4f4;
   --control-foreground: #111;
+  --control-panel-background: rgb(15 15 15 / 0.94);
+  --control-panel-foreground: #e7e7e7;
+  --dialog-background: rgb(25 25 25 / 0.9);
+  --dialog-code-background: #111;
+  --dialog-code-foreground: #d5d5d5;
+  --dialog-foreground: #e7e7e7;
+  --dialog-status: #c5c5c5;
   --ink: #f4f4f4;
   --muted: #999;
   --panel: rgb(25 25 25 / 0.76);
   --rule: #363636;
   --shadow: rgb(0 0 0 / 0.35);
+  --tweak-button: #f4f4f4;
+  --tweak-button-foreground: #111;
+  --tweak-button-active: #bbb;
+  --tweak-button-hover: #ddd;
+  --tweak-container: #242424;
+  --tweak-container-active: #353535;
+  --tweak-container-hover: #303030;
+  --tweak-foreground: #f4f4f4;
+  --tweak-input: #111;
+  --tweak-label: #b0b0b0;
 }
 
 * {
@@ -166,8 +200,8 @@ input {
   width: min(25rem, calc(100vw - 2rem));
   padding: 1.25rem;
   overflow-y: auto;
-  color: #e7ebef;
-  background: rgb(15 15 15 / 0.94);
+  color: var(--control-panel-foreground);
+  background: var(--control-panel-background);
   box-shadow: 1rem 0 3rem rgb(0 0 0 / 0.2);
   transform: translateX(-105%);
   transition: transform 220ms ease;
@@ -189,7 +223,7 @@ input {
   justify-content: space-between;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #3b3b3b;
+  border-bottom: 1px solid var(--rule);
 }
 
 .eyebrow {
@@ -247,9 +281,9 @@ input {
   width: min(52rem, calc(100vw - 2rem));
   max-height: min(42rem, calc(100vh - 2rem));
   padding: clamp(1.25rem, 3vw, 2rem);
-  color: #e5e8ea;
-  background: #191e26;
-  border: 1px solid #46525e;
+  color: var(--dialog-foreground);
+  background: var(--dialog-background);
+  border: 1px solid var(--rule);
   border-radius: 4px;
   box-shadow: 0 2.5rem 7rem rgb(0 0 0 / 0.55);
   backdrop-filter: blur(24px);
@@ -267,7 +301,7 @@ input {
 
 .code-heading h1 {
   margin: 0.3rem 0 0;
-  color: #fff;
+  color: var(--dialog-foreground);
   font-family: "Iowan Old Style", Baskerville, Georgia, serif;
   font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 500;
@@ -280,13 +314,16 @@ input {
 
 .copy-button {
   padding: 0 1rem;
-  color: var(--accent-foreground);
-  background: var(--accent);
+  color: var(--dialog-foreground);
+  background: transparent;
+  border-color: var(--rule);
+  box-shadow: none;
 }
 
 .icon-button {
-  color: var(--control-foreground);
-  background: color-mix(in srgb, var(--control-background) 12%, transparent);
+  color: var(--control-panel-foreground);
+  background: transparent;
+  border-color: var(--rule);
   box-shadow: none;
   font-size: 1.5rem;
   line-height: 1;
@@ -297,8 +334,9 @@ pre {
   margin: 1.5rem 0 0;
   padding: 1rem;
   overflow: auto;
-  color: #c9d4dd;
-  background: #11161d;
+  color: var(--dialog-code-foreground);
+  background: var(--dialog-code-background);
+  border: 1px solid var(--rule);
   border-radius: 2px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.78rem;
@@ -309,7 +347,7 @@ pre {
 .copy-status {
   min-height: 1.25rem;
   margin: 0.75rem 0 0;
-  color: #f4f4f4;
+  color: var(--dialog-status);
   font-size: 0.8rem;
 }
 
@@ -320,21 +358,22 @@ pre {
 .tp-rotv {
   --tp-base-background-color: transparent;
   --tp-base-shadow-color: transparent;
-  --tp-button-background-color: var(--accent);
-  --tp-button-background-color-active: #bbb;
-  --tp-button-background-color-focus: var(--accent);
-  --tp-button-background-color-hover: #ddd;
-  --tp-container-background-color: #242424;
-  --tp-container-background-color-active: #353535;
-  --tp-container-background-color-focus: #353535;
-  --tp-container-background-color-hover: #303030;
-  --tp-container-foreground-color: #f4f4f4;
-  --tp-groove-foreground-color: var(--accent);
-  --tp-input-background-color: #111;
-  --tp-input-foreground-color: #f4f4f4;
-  --tp-label-foreground-color: #b0b0b0;
-  --tp-monitor-background-color: #111;
-  --tp-monitor-foreground-color: #f4f4f4;
+  --tp-button-background-color: var(--tweak-button);
+  --tp-button-foreground-color: var(--tweak-button-foreground);
+  --tp-button-background-color-active: var(--tweak-button-active);
+  --tp-button-background-color-focus: var(--tweak-button);
+  --tp-button-background-color-hover: var(--tweak-button-hover);
+  --tp-container-background-color: var(--tweak-container);
+  --tp-container-background-color-active: var(--tweak-container-active);
+  --tp-container-background-color-focus: var(--tweak-container-active);
+  --tp-container-background-color-hover: var(--tweak-container-hover);
+  --tp-container-foreground-color: var(--tweak-foreground);
+  --tp-groove-foreground-color: var(--tweak-foreground);
+  --tp-input-background-color: var(--tweak-input);
+  --tp-input-foreground-color: var(--tweak-foreground);
+  --tp-label-foreground-color: var(--tweak-label);
+  --tp-monitor-background-color: var(--tweak-input);
+  --tp-monitor-foreground-color: var(--tweak-foreground);
 }
 
 @media (max-width: 640px) {
