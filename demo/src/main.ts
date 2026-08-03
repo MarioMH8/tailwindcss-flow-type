@@ -11,6 +11,17 @@ const TOKEN_MODE_OPTIONS = {
 	'Modular scale': 'modular',
 } as const;
 
+const DEFAULT_CONFIG = {
+	baseMax: 1.25,
+	baseMin: 1,
+	namespace: 'text',
+	ratioMax: 1.2,
+	ratioMin: 1.125,
+	replaceDefaultTextScale: false,
+	viewportMax: 96,
+	viewportMin: 20,
+} as const;
+
 type TokenMode = (typeof TOKEN_MODE_OPTIONS)[keyof typeof TOKEN_MODE_OPTIONS];
 
 interface DemoToken {
@@ -40,12 +51,7 @@ interface DemoState {
 }
 
 const state: DemoState = {
-	baseMax: 1.25,
-	baseMin: 1,
-	namespace: 'flow-text',
-	ratioMax: 1.2,
-	ratioMin: 1.125,
-	replaceDefaultTextScale: false,
+	...DEFAULT_CONFIG,
 	selectedToken: 'display',
 	tokens: [
 		{
@@ -131,15 +137,15 @@ function getTokenLineHeight(token: DemoToken): string {
 
 function createCssConfig(): string {
 	const declarations = [
-		`  namespace: ${state.namespace};`,
-		`  replace-default-text-scale: ${state.replaceDefaultTextScale};`,
-		`  scale-base-min: ${state.baseMin}rem;`,
-		`  scale-base-max: ${state.baseMax}rem;`,
-		`  scale-ratio-min: ${state.ratioMin};`,
-		`  scale-ratio-max: ${state.ratioMax};`,
-		`  scale-viewport-min: ${state.viewportMin}rem;`,
-		`  scale-viewport-max: ${state.viewportMax}rem;`,
-	].join('\n');
+		state.namespace !== DEFAULT_CONFIG.namespace && `  namespace: ${state.namespace};`,
+		state.replaceDefaultTextScale && '  replace-default-text-scale: true;',
+		state.baseMin !== DEFAULT_CONFIG.baseMin && `  scale-base-min: ${state.baseMin}rem;`,
+		state.baseMax !== DEFAULT_CONFIG.baseMax && `  scale-base-max: ${state.baseMax}rem;`,
+		state.ratioMin !== DEFAULT_CONFIG.ratioMin && `  scale-ratio-min: ${state.ratioMin};`,
+		state.ratioMax !== DEFAULT_CONFIG.ratioMax && `  scale-ratio-max: ${state.ratioMax};`,
+		state.viewportMin !== DEFAULT_CONFIG.viewportMin && `  scale-viewport-min: ${state.viewportMin}rem;`,
+		state.viewportMax !== DEFAULT_CONFIG.viewportMax && `  scale-viewport-max: ${state.viewportMax}rem;`,
+	].filter((declaration): declaration is string => typeof declaration === 'string');
 	const tokenDeclarations = state.tokens.flatMap(token => {
 		const name = token.name.trim();
 
@@ -171,7 +177,13 @@ function createCssConfig(): string {
 		return declarations;
 	});
 
-	return `@plugin 'tailwindcss-flow-type' {\n${declarations}\n}\n\n@theme {\n${tokenDeclarations.join('\n')}\n}`;
+	const plugin =
+		declarations.length === 0
+			? `@plugin 'tailwindcss-flow-type';`
+			: `@plugin 'tailwindcss-flow-type' {\n${declarations.join('\n')}\n}`;
+	const theme = tokenDeclarations.length === 0 ? '' : `@theme {\n${tokenDeclarations.join('\n')}\n}`;
+
+	return [plugin, theme].filter(section => section.length > 0).join('\n\n');
 }
 
 function renderSpecimen(): void {
