@@ -111,6 +111,13 @@ const outputElement = getElement<HTMLElement>('#css-output');
 const viewportElement = getElement<HTMLElement>('#viewport-readout');
 const copyButton = getElement<HTMLButtonElement>('#copy');
 const copyStatusElement = getElement<HTMLElement>('#copy-status');
+const controlPanel = getElement<HTMLElement>('#control-panel');
+const openControlsButton = getElement<HTMLButtonElement>('#open-controls');
+const closeControlsButton = getElement<HTMLButtonElement>('#close-controls');
+const openCssButton = getElement<HTMLButtonElement>('#open-css');
+const closeCssButton = getElement<HTMLButtonElement>('#close-css');
+const cssDialog = getElement<HTMLDialogElement>('#css-dialog');
+const themeToggleButton = getElement<HTMLButtonElement>('#theme-toggle');
 
 function getScale(): FlowScale {
 	return {
@@ -231,6 +238,23 @@ function render(): void {
 	renderSpecimen();
 }
 
+function setControlsOpen(isOpen: boolean): void {
+	controlPanel.classList.toggle('is-open', isOpen);
+	controlPanel.setAttribute('aria-hidden', (!isOpen).toString());
+	openControlsButton.setAttribute('aria-expanded', isOpen.toString());
+
+	if (isOpen) {
+		setTimeout(() => paneElement.querySelector<HTMLElement>('input')?.focus(), 0);
+	}
+}
+
+function setTheme(theme: 'dark' | 'light'): void {
+	document.documentElement.dataset['theme'] = theme;
+	themeToggleButton.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+	themeToggleButton.textContent = theme === 'dark' ? '☀' : '◐';
+	localStorage.setItem('flow-type-demo-theme', theme);
+}
+
 function createPane(): void {
 	paneElement.replaceChildren();
 	const pane = new Pane({ container: paneElement, title: 'Flow controls' });
@@ -309,6 +333,15 @@ copyButton.addEventListener('click', async () => {
 	}
 });
 
+openControlsButton.addEventListener('click', () => setControlsOpen(true));
+closeControlsButton.addEventListener('click', () => setControlsOpen(false));
+openCssButton.addEventListener('click', () => cssDialog.showModal());
+closeCssButton.addEventListener('click', () => cssDialog.close());
+themeToggleButton.addEventListener('click', () => {
+	setTheme(document.documentElement.dataset['theme'] === 'dark' ? 'light' : 'dark');
+});
+
+setTheme(localStorage.getItem('flow-type-demo-theme') === 'dark' ? 'dark' : 'light');
 window.addEventListener('resize', render);
 createPane();
 render();
