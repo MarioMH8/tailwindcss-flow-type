@@ -44,7 +44,6 @@ interface DemoState {
 	replaceDefaultTextScale: boolean;
 	ratioMax: number;
 	ratioMin: number;
-	selectedToken: string;
 	tokens: DemoToken[];
 	viewportMax: number;
 	viewportMin: number;
@@ -52,7 +51,6 @@ interface DemoState {
 
 const state: DemoState = {
 	...DEFAULT_CONFIG,
-	selectedToken: 'display',
 	tokens: [
 		{
 			letterSpacing: '',
@@ -195,39 +193,20 @@ function createCssConfig(): string {
 
 function renderSpecimen(): void {
 	specimenElement.replaceChildren();
-	const tokenNames = new Set(state.tokens.map(token => token.name));
-
-	if (!tokenNames.has(state.selectedToken)) {
-		state.selectedToken = state.tokens[0]?.name ?? '';
-	}
 
 	for (const token of state.tokens) {
 		const card = document.createElement('article');
 		const label = document.createElement('p');
 		const text = document.createElement('p');
 
-		card.className = `token-card${token.name === state.selectedToken ? ' selected' : ''}`;
+		card.className = 'token-card';
 		card.style.fontSize = getTokenFontSize(token);
 		card.style.lineHeight = getTokenLineHeight(token);
 		card.style.letterSpacing = token.letterSpacing;
-		card.tabIndex = 0;
 		label.className = 'token-label';
 		label.textContent = `${state.namespace}-${token.name}`;
 		text.textContent = token.name === 'body' ? 'A flexible system stays precise.' : 'Typography with a pulse.';
 		card.append(label, text);
-		card.addEventListener('click', () => {
-			state.selectedToken = token.name;
-			render();
-		});
-		card.addEventListener('keydown', event => {
-			if (!(event.key === 'Enter' || event.key === ' ')) {
-				return;
-			}
-
-			event.preventDefault();
-			state.selectedToken = token.name;
-			render();
-		});
 		specimenElement.append(card);
 	}
 }
@@ -337,6 +316,21 @@ openControlsButton.addEventListener('click', () => setControlsOpen(true));
 closeControlsButton.addEventListener('click', () => setControlsOpen(false));
 openCssButton.addEventListener('click', () => cssDialog.showModal());
 closeCssButton.addEventListener('click', () => cssDialog.close());
+document.addEventListener('pointerdown', event => {
+	if (
+		controlPanel.classList.contains('is-open') &&
+		event.target instanceof Node &&
+		!controlPanel.contains(event.target) &&
+		!openControlsButton.contains(event.target)
+	) {
+		setControlsOpen(false);
+	}
+});
+cssDialog.addEventListener('click', event => {
+	if (event.target === cssDialog) {
+		cssDialog.close();
+	}
+});
 themeToggleButton.addEventListener('click', () => {
 	setTheme(document.documentElement.dataset['theme'] === 'dark' ? 'light' : 'dark');
 });

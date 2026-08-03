@@ -120,13 +120,8 @@ input {
   transition: color 160ms ease, transform 160ms ease;
 }
 
-.token-card:hover,
-.token-card:focus-visible {
+.token-card:hover {
   color: var(--ink);
-}
-
-.token-card:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
 .token-card.selected {
@@ -344,10 +339,6 @@ pre {
   .preview-meta {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .hint {
-    display: none;
   }
 
   .floating-actions {
