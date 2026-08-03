@@ -128,18 +128,14 @@ input {
 }
 
 .token-card {
-  max-width: 60rem;
   padding: 0.2rem 0 1rem;
   color: color-mix(in srgb, var(--ink) 58%, transparent);
-  border-bottom: 1px solid var(--rule);
 }
 
 .token-card.selected {
   order: -1;
-  max-width: 100%;
   padding: clamp(1rem, 5vw, 4rem) 0;
   color: var(--ink);
-  border-bottom-color: var(--ink);
 }
 
 .token-label {
