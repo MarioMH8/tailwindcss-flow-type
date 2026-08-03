@@ -48,7 +48,7 @@ body::before {
   --size: 45px;
   --line: color-mix(in hsl, canvasText, transparent 80%);
   position: fixed;
-  z-index: -1;
+  z-index: 0;
   top: 0;
   content: '';
   width: 100vw;
@@ -83,6 +83,8 @@ input {
 }
 
 .laboratory {
+  position: relative;
+  z-index: 1;
   display: grid;
   min-height: 100vh;
   padding: clamp(1rem, 3vw, 3rem);
