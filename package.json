@@ -91,7 +91,7 @@
 		"eslint": "10.8.0",
 		"husky": "9.1.7",
 		"lint-staged": "17.3.0",
-		"postcss": "8.5.25",
+		"postcss": "8.5.26",
 		"tailwindcss": "4.3.3",
 		"tsup": "8.5.1",
 		"tweakpane": "4.0.5",
