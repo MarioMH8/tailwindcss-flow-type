@@ -6,6 +6,7 @@ import postcss from 'postcss';
 interface GeneratePluginCssOptions {
 	onlyUtilities?: boolean;
 	options?: string;
+	preset?: boolean;
 	theme?: string;
 }
 
@@ -18,12 +19,14 @@ export default async function generateCss(
 	{ onlyUtilities = true, ...options }: GeneratePluginCssOptions = DEFAULT_OPTIONS
 ): Promise<string> {
 	const configInsert = options.theme ? `@theme {\n${options.theme}\n}` : '';
-	const pluginOptions = options.options ? ` ${options.options}` : ';';
+	const pluginDirective = options.preset ? '' : `@plugin '..'${options.options ? ` ${options.options}` : ';'}`;
+	const presetImport = options.preset ? `@import '../src/preset/default.css';` : '';
 
 	const result = await postcss(tailwindcss()).process(
 		`
-      @import ${onlyUtilities ? `'tailwindcss/utilities'` : `'tailwindcss'`} source(none);
-      @plugin '..'${pluginOptions}
+       @import ${onlyUtilities ? `'tailwindcss/utilities'` : `'tailwindcss'`} source(none);
+       ${presetImport}
+       ${pluginDirective}
       @source './${filename}';
 
       ${configInsert}`,

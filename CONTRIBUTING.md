@@ -207,7 +207,7 @@ This project uses GitFlow with Changesets for versioning and npm publication.
 1. Create a `feature/*` branch from `develop`.
 2. Add a changeset for every package behavior change with `bun changeset add`.
 3. Open and merge the pull request into `develop`.
-4. After CI passes, each push to `develop` publishes a unique beta version to npm under the `beta` dist-tag.
+4. After CI passes, each push to `develop` that adds or modifies a changeset publishes a unique beta version to npm under the `beta` dist-tag.
 
 Install the current beta explicitly when testing it:
 
@@ -215,24 +215,30 @@ Install the current beta explicitly when testing it:
 npm install tailwindcss-flow-type@beta
 ```
 
-Snapshot releases do not modify or commit version files. They use the pending changesets to calculate a version such as `0.2.0-beta-20260802153000`.
+Snapshot releases do not modify or commit version files. They use the pending changesets to calculate a version such as `0.2.0-beta-20260802153000`. Documentation, tooling, and other changes without a changeset do not publish a beta.
 
 ### Stable Release
 
-1. After a beta has been validated, open a pull request from `develop` to `main`.
-2. Merge the pull request into `main`.
-3. Changesets opens a version pull request on `main`.
-4. Merge that version pull request to publish the stable package to npm under the `latest` dist-tag.
-5. Merge `main` back into `develop` to synchronize the generated changelog, package version, and consumed changesets.
+1. When `develop` contains non-empty changesets, CI creates or updates the draft `changeset-release/main` pull request targeting `main`.
+2. Validate the current beta. When it is ready, mark the generated release pull request ready for review and merge it into `main`.
+3. The release job on `main` publishes the stable package to npm under the `latest` dist-tag.
+4. CI opens an `internal:sync` pull request from `main` to `develop` after publication. Merge it to synchronize the generated changelog, package version, and consumed changesets.
+
+The generated release pull request contains the pending changes, calculated stable version, changelog entry, and consumed changesets. Changesets release pull requests and their version commits use `chore: release v<version>`. They do not publish packages; publication remains exclusive to `main`.
 
 ### Release Stabilization
 
-Use a `release/*` branch only when a release needs a stabilization period. It freezes the release scope while new work continues on `develop`.
+Use a `release/*` branch only when a release needs a stabilization period. It freezes the release scope while new work continues on `develop`; do not merge the automatically generated release pull request while that stabilization is in progress.
 
 1. Create `release/<version>` from `develop`.
 2. Allow only release-critical fixes, documentation updates, and QA changes on the release branch.
-3. Merge the release branch into `main` when it is approved, then follow the stable release steps from the version pull request onward.
-4. Merge `main` back into `develop` so the stabilization fixes and generated release files return to the integration branch.
+3. Merge the release branch into `main` when it is approved.
+4. Changesets opens a version pull request on `main`; merge it to publish the stable package.
+5. Merge the `internal:sync` pull request from `main` to `develop` so the stabilization fixes and generated release files return to the integration branch.
+
+GitHub Actions must be allowed to create pull requests for the automated release pull request to work.
+
+The `internal:sync` label exempts automated branch synchronization pull requests from issue and type validation. They must not include changeset files.
 
 For an urgent production fix, create `hotfix/*` from `main`, include a changeset, merge it into `main`, then merge `main` back into `develop`.
 

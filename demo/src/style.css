@@ -1,0 +1,444 @@
+:root {
+  color-scheme: light;
+  color: #0d0d0d;
+  background: #fbfbfb;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-synthesis: none;
+  --accent: #111;
+  --accent-foreground: #fff;
+  --canvas: #fbfbfb;
+  --control-background: #151515;
+  --control-foreground: #fff;
+  --control-panel-background: rgb(255 255 255 / 0.94);
+  --control-panel-foreground: #111;
+  --dialog-background: rgb(255 255 255 / 0.9);
+  --dialog-code-background: #f3f3f3;
+  --dialog-code-foreground: #111;
+  --dialog-foreground: #111;
+  --dialog-status: #555;
+  --ink: #151515;
+  --muted: #777;
+  --panel: rgb(255 255 255 / 0.74);
+  --rule: #dedede;
+  --surface-radius: 4px;
+  --shadow: rgb(0 0 0 / 0.16);
+  --tweak-button: #111;
+  --tweak-button-foreground: #fff;
+  --tweak-button-active: #333;
+  --tweak-button-hover: #222;
+  --tweak-container: #f0f0f0;
+  --tweak-container-active: #ddd;
+  --tweak-container-hover: #e6e6e6;
+  --tweak-foreground: #111;
+  --tweak-input: #fff;
+  --tweak-label: #555;
+  --laboratory-padding: clamp(0.75rem, 2vw, 1.75rem);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  color: #f4f4f4;
+  background: #111;
+  --accent: #f4f4f4;
+  --accent-foreground: #111;
+  --canvas: #111;
+  --control-background: #f4f4f4;
+  --control-foreground: #111;
+  --control-panel-background: rgb(15 15 15 / 0.94);
+  --control-panel-foreground: #e7e7e7;
+  --dialog-background: rgb(25 25 25 / 0.9);
+  --dialog-code-background: #111;
+  --dialog-code-foreground: #d5d5d5;
+  --dialog-foreground: #e7e7e7;
+  --dialog-status: #c5c5c5;
+  --ink: #f4f4f4;
+  --muted: #999;
+  --panel: rgb(25 25 25 / 0.76);
+  --rule: #363636;
+  --shadow: rgb(0 0 0 / 0.35);
+  --tweak-button: #f4f4f4;
+  --tweak-button-foreground: #111;
+  --tweak-button-active: #bbb;
+  --tweak-button-hover: #ddd;
+  --tweak-container: #242424;
+  --tweak-container-active: #353535;
+  --tweak-container-hover: #303030;
+  --tweak-foreground: #f4f4f4;
+  --tweak-input: #111;
+  --tweak-label: #b0b0b0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  color: var(--canvas);
+  background: var(--ink);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background: light-dark(#fff, #000);
+}
+
+body::before {
+  --size: 45px;
+  --line: color-mix(in hsl, canvasText, transparent 80%);
+  position: fixed;
+  z-index: 0;
+  top: 0;
+  content: '';
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+  mask: radial-gradient(ellipse at 0% 0%, black 0 14%, transparent 56%);
+  transform-style: flat;
+  -webkit-mask: radial-gradient(ellipse at 0% 0%, black 0 14%, transparent 56%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 20;
+  top: -4rem;
+  left: 1rem;
+  padding: 0.7rem 0.9rem;
+  color: #fff;
+  background: var(--accent);
+  border-radius: var(--surface-radius);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.laboratory {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-height: 100vh;
+  padding: var(--laboratory-padding);
+}
+
+.preview-panel {
+  display: grid;
+  align-content: space-between;
+  min-height: calc(100vh - clamp(2rem, 6vw, 6rem));
+  padding: clamp(1rem, 3vw, 2.5rem);
+  overflow: hidden;
+  background: transparent;
+}
+
+.preview-meta {
+  position: fixed;
+  z-index: 10;
+  top: var(--laboratory-padding);
+  right: var(--laboratory-padding);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.viewport-readout {
+  padding: 0.45rem 0.65rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border-radius: var(--surface-radius);
+  white-space: nowrap;
+}
+
+.specimen {
+  display: grid;
+  align-content: center;
+  gap: clamp(1rem, 3vw, 2.2rem);
+  min-height: 56vh;
+  margin: 5rem 0 1.5rem;
+}
+
+.token-card {
+  padding: 0.2rem 0 1rem;
+  color: color-mix(in srgb, var(--ink) 58%, transparent);
+}
+
+.token-card.selected {
+  order: -1;
+  padding: clamp(1rem, 5vw, 4rem) 0;
+  color: var(--ink);
+}
+
+.token-label {
+  margin-bottom: 0.55rem;
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.token-card > p:last-child {
+  margin: 0;
+}
+
+.control-panel {
+  position: fixed;
+  z-index: 10;
+  top: var(--laboratory-padding);
+  left: var(--laboratory-padding);
+  width: min(25rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 3.5rem);
+  overflow-x: visible;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.code-heading,
+.dialog-actions,
+.floating-actions {
+  display: flex;
+  align-items: center;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.floating-actions {
+  position: fixed;
+  z-index: 5;
+  right: var(--laboratory-padding);
+  bottom: var(--laboratory-padding);
+  gap: 0.55rem;
+}
+
+.utility-button {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.utility-button:hover {
+  opacity: 0.55;
+}
+
+.utility-button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.utility-button--github {
+  text-decoration: none;
+}
+
+.utility-button--github img {
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: invert(var(--github-icon-invert, 0));
+}
+
+:root[data-theme='dark'] .utility-button--github img {
+  --github-icon-invert: 1;
+}
+
+.floating-button,
+.copy-button,
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  color: var(--control-foreground);
+  background: var(--control-background);
+  border: 1px solid transparent;
+  border-radius: var(--surface-radius);
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 0.6rem 1.5rem var(--shadow);
+}
+
+.floating-button--wide {
+  padding: 0 1rem;
+}
+
+.floating-button:hover,
+.copy-button:hover,
+.icon-button:hover {
+  color: var(--accent-foreground);
+  background: var(--accent);
+}
+
+.floating-button:focus-visible,
+.copy-button:focus-visible,
+.icon-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 3px;
+}
+
+.css-dialog {
+  width: min(52rem, calc(100vw - 2rem));
+  max-height: min(42rem, calc(100vh - 2rem));
+  padding: clamp(1.25rem, 3vw, 2rem);
+  color: var(--dialog-foreground);
+  background: var(--dialog-background);
+  border: 1px solid var(--rule);
+  border-radius: var(--surface-radius);
+  box-shadow: 0 2.5rem 7rem rgb(0 0 0 / 0.55);
+  backdrop-filter: blur(24px);
+}
+
+.css-dialog::backdrop {
+  background: rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(16px);
+}
+
+.code-heading {
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.code-heading h1 {
+  margin: 0.3rem 0 0;
+  color: var(--dialog-foreground);
+  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+}
+
+.dialog-actions {
+  gap: 0.5rem;
+}
+
+.copy-button {
+  padding: 0 1rem;
+  color: var(--dialog-foreground);
+  background: transparent;
+  border-color: var(--rule);
+  box-shadow: none;
+}
+
+.icon-button {
+  color: var(--control-panel-foreground);
+  background: transparent;
+  border-color: var(--rule);
+  box-shadow: none;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+pre {
+  max-height: 28rem;
+  margin: 1.5rem 0 0;
+  padding: 1rem;
+  overflow: auto;
+  color: var(--dialog-code-foreground);
+  background: var(--dialog-code-background);
+  border: 1px solid var(--rule);
+  border-radius: var(--surface-radius);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.copy-status {
+  min-height: 1.25rem;
+  margin: 0.75rem 0 0;
+  color: var(--dialog-status);
+  font-size: 0.8rem;
+}
+
+.tp-dfwv {
+  position: static !important;
+  width: 100% !important;
+}
+
+.tp-rotv {
+  --tp-base-background-color: var(--control-panel-background);
+  --tp-base-border-radius: var(--surface-radius);
+  --tp-base-shadow-color: var(--shadow);
+  --tp-blade-border-radius: var(--surface-radius);
+  --tp-button-background-color: var(--tweak-button);
+  --tp-button-foreground-color: var(--tweak-button-foreground);
+  --tp-button-background-color-active: var(--tweak-button-active);
+  --tp-button-background-color-focus: var(--tweak-button);
+  --tp-button-background-color-hover: var(--tweak-button-hover);
+  --tp-container-background-color: var(--tweak-container);
+  --tp-container-background-color-active: var(--tweak-container-active);
+  --tp-container-background-color-focus: var(--tweak-container-active);
+  --tp-container-background-color-hover: var(--tweak-container-hover);
+  --tp-container-foreground-color: var(--tweak-foreground);
+  --tp-groove-foreground-color: var(--tweak-foreground);
+  --tp-input-background-color: var(--tweak-input);
+  --tp-input-foreground-color: var(--tweak-foreground);
+  --tp-label-foreground-color: var(--tweak-label);
+  --tp-monitor-background-color: var(--tweak-input);
+  --tp-monitor-foreground-color: var(--tweak-foreground);
+}
+
+@media (max-width: 640px) {
+  .laboratory {
+    --laboratory-padding: 0.65rem;
+  }
+
+  .preview-panel {
+    min-height: calc(100vh - 1.3rem);
+    padding: 1.25rem;
+    border-radius: var(--surface-radius);
+  }
+
+
+  .preview-panel {
+    min-height: calc(100vh - 1.3rem);
+  }
+
+  .floating-actions {
+    right: 1rem;
+    bottom: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+.tp-rotv.tp-rotv-expanded .tp-rotv_c,
+.tp-fldv.tp-fldv-expanded>.tp-fldv_c {
+  padding-right: 12px;
+ }
