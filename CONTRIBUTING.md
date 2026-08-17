@@ -1,6 +1,7 @@
 # Contributing to tailwindcss-flow-type
 
-Thank you for your interest in contributing to **tailwindcss-flow-type** — A JavaScript library for moxfield.com
+Thank you for your interest in contributing to **tailwindcss-flow-type** — A Tailwind CSS plugin for fluid,
+responsive typography that scales smoothly across screen sizes with minimal configuration.
 
 Before you dive in, please read this guide fully. We have a structured workflow to keep the project organized and maintainable.
 
@@ -77,7 +78,7 @@ PRs that are not linked to an approved issue will be **automatically rejected** 
 ### Clone and Build
 
 ```
-git clone https://github.com/MarioMH8/proxystudio.app.git
+git clone https://github.com/MarioMH8/tailwindcss-flow-type.git
 cd proxystudio.app
 bun run build
 ```
@@ -194,13 +195,13 @@ Branch names **must** match this pattern:
 
 This project uses GitFlow with Changesets for versioning and npm publication.
 
-| Branch | Purpose | Publication |
-|--------|---------|-------------|
-| `feature/*` | Product and maintenance work | None |
-| `develop` | Integration branch for the next release | Beta snapshot tagged `beta` |
-| `release/*` | Optional release stabilization branch created from `develop` | None |
-| `main` | Stable, production-ready releases | Stable release tagged `latest` |
-| `hotfix/*` | Urgent fix created from `main` | None |
+| Branch      | Purpose                                                      | Publication                    |
+|-------------|--------------------------------------------------------------|--------------------------------|
+| `feature/*` | Product and maintenance work                                 | None                           |
+| `develop`   | Integration branch for the next release                      | Beta snapshot tagged `beta`    |
+| `release/*` | Optional release stabilization branch created from `develop` | None                           |
+| `main`      | Stable, production-ready releases                            | Stable release tagged `latest` |
+| `hotfix/*`  | Urgent fix created from `main`                               | None                           |
 
 ### Daily Development
 
@@ -327,4 +328,4 @@ Violations may result in removal from the project.
 
 ## Questions?
 
-Use [GitHub Discussions](https://github.com/MarioMH8/proxystudio.app/discussions) — not issues — for questions, ideas, and general conversation.
+Use [GitHub Discussions](https://github.com/MarioMH8/tailwindcss-flow-type/discussions) — not issues — for questions, ideas, and general conversation.
