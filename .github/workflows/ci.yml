@@ -93,7 +93,7 @@ jobs:
         name: Deploy demo to GitHub Pages
         runs-on: ubuntu-latest
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.release.outputs.published == 'true' }}
-        needs: [ release ]
+        needs: [ check, release ]
         concurrency:
             group: github-pages
             cancel-in-progress: false
