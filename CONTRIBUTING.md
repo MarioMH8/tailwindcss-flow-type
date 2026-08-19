@@ -214,6 +214,22 @@ This project uses GitFlow with Changesets for versioning and npm publication.
 | `.github/workflows/release-beta.yml`    | Push to `develop` with changeset changes | Publishes a beta snapshot to npm under the `beta` tag                           |
 | `.github/workflows/sync-to-develop.yml` | Merge of any PR into `main`              | Opens/updates the sync PR `internal/sync-from-main-to-develop`                  |
 
+### Merge Methods per Pull Request
+
+Use the merge method that keeps the history of `main` and `develop` aligned:
+
+| Pull request                            | Branches                                             | Merge method     | Rationale                                                                                                       |
+|-----------------------------------------|------------------------------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------|
+| Feature, fix, chore, docs, renovate     | `feature/*`, `fix/*`, `renovate/*` → `develop`       | **Squash merge** | Individual work branches produce one clean commit; `develop` keeps a linear history.                            |
+| Hotfix                                  | `hotfix/*` → `main`                                  | **Squash merge** | The branch comes from `main`; one commit is enough and keeps `main` linear.                                        |
+| Release                                 | `changeset-release/main` → `main`                    | **Merge commit** | Lets `main` absorb the full commit history from `develop`, keeping both branches aligned and preventing divergence. |
+| Sync                                    | `internal/sync-from-main-to-develop` → `develop`     | **Merge commit** | Pulls the released `main` history back into `develop` without losing ancestry.                                     |
+
+Rule of thumb:
+
+- **Squash merge** when the source branch is a short-lived work branch whose history does not need to survive.
+- **Merge commit** when the source branch is `main` or `develop`, so both branches share ancestry and future pull requests stay small.
+
 ### Daily Development
 
 1. Create a `feature/*` branch from `develop`.
