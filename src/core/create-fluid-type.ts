@@ -123,7 +123,7 @@ function createFluidTypographyToken(
 
 	if (token.size !== undefined) {
 		fontSize = createFluidValue(token.size, viewport);
-	} else if (token.scale !== undefined && scale !== undefined) {
+	} else if (scale !== undefined && token.scale !== undefined) {
 		fontSize = createModularScaleValue(token.scale, scale);
 	} else {
 		throw new TypeError('scale is required for modular tokens');
